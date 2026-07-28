@@ -2,17 +2,19 @@ package com.qst.medical.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.qst.medical.entity.MedicalPolicy;
 import com.qst.medical.mapper.MedicalPolicyMapper;
 import com.qst.medical.model.MedicalPolicyModel;
 import com.qst.medical.param.MedicalPolicyParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * 医保政策业务逻辑层
- * 负责医保政策的分页查询和详情查询
+ * 负责医保政策的分页查询、详情查询、添加、修改和删除
  */
 @Service
 public class MedicalPolicyService {
@@ -44,5 +46,39 @@ public class MedicalPolicyService {
      */
     public MedicalPolicyModel getById(Long id) {
         return medicalPolicyMapper.selectById(id);
+    }
+
+    /**
+     * 添加医保政策
+     *
+     * @param medicalPolicy 医保政策实体，id 字段由数据库自增生成
+     * @return 添加后的医保政策（含自增 ID）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public MedicalPolicy save(MedicalPolicy medicalPolicy) {
+        medicalPolicyMapper.insert(medicalPolicy);
+        return medicalPolicy;
+    }
+
+    /**
+     * 修改医保政策
+     *
+     * @param medicalPolicy 医保政策实体，id 为必填字段用于定位记录
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public int update(MedicalPolicy medicalPolicy) {
+        return medicalPolicyMapper.update(medicalPolicy);
+    }
+
+    /**
+     * 根据 ID 删除医保政策
+     *
+     * @param id 医保政策主键 ID
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteById(Long id) {
+        return medicalPolicyMapper.deleteById(id);
     }
 }
