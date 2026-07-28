@@ -35,4 +35,29 @@
         WHERE sale_id = #{saleId}
     </select>
 
+    <!-- ==================== 新增语句 ==================== -->
+
+    <!-- 添加销售地点：自增 ID 由数据库自动生成 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="saleId">
+        INSERT INTO sale (sale_name, sale_phone, createtime, updatetime)
+        VALUES (#{saleName}, #{salePhone}, #{createtime}, #{updatetime})
+    </insert>
+
+    <!-- ==================== 修改语句 ==================== -->
+
+    <!-- 修改销售地点：根据 ID 更新药店名称、联系电话和更新时间 -->
+    <update id="update">
+        UPDATE sale
+        SET sale_name = #{saleName},
+            sale_phone = #{salePhone},
+            updatetime = #{updatetime}
+        WHERE sale_id = #{saleId}
+    </update>
+
+    <!-- ==================== 删除语句 ==================== -->
+
+    <!-- 根据 ID 删除销售地点 -->
+    <delete id="deleteById">
+        DELETE FROM sale WHERE sale_id = #{saleId}
+    </delete>
 </mapper>

@@ -30,4 +30,28 @@ public interface SaleMapper {
      * @return 销售地点实体，未找到则返回 null
      */
     Sale selectById(Long saleId);
+
+    /**
+     * 添加销售地点
+     *
+     * @param sale 销售地点实体，saleId 由数据库自增生成
+     * @return 受影响的行数（1 表示成功）
+     */
+    int insert(Sale sale);
+
+    /**
+     * 修改销售地点
+     *
+     * @param sale 销售地点实体，saleId 为必填字段用于定位记录
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    int update(Sale sale);
+
+    /**
+     * 根据 ID 删除销售地点
+     *
+     * @param saleId 药店主键 ID
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    int deleteById(Long saleId);
 }
