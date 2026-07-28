@@ -1,18 +1,20 @@
 package com.qst.medical.mapper;
 
+import com.qst.medical.entity.City;
 import org.apache.ibatis.annotations.Mapper;
 
-/**
- * 城市信息数据库操作接口
- */
+import java.util.List;
+
 @Mapper
 public interface CityMapper {
 
     /**
-     * 根据城市 ID 删除城市信息
-     *
-     * @param cityId 城市 ID
-     * @return 受影响的行数
+     * 查询所有城市信息
      */
-    int deleteByCityId(Long cityId);
+    List<City> selectAll();
+
+    /**
+     * 根据ID查询城市信息
+     */
+    City selectById(Long cityId);
 }
