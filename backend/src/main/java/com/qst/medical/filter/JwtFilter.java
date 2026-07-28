@@ -24,8 +24,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 方式一：从自定义头 "token" 中获取
         String token = request.getHeader("token");
-        if (token != null && JwtUtil.checkToken(token)) {
+        // 方式二：从标准 Authorization 头中获取（格式：Bearer <token>）
+        if (token == null || token.isEmpty()) {
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);
+            }
+        }
+        // 校验 Token 并设置认证信息
+        if (token != null && !token.isEmpty() && JwtUtil.checkToken(token)) {
             Long id = JwtUtil.getId(token);
             Account account = accountMapper.selectById(id);
             if (account != null) {
