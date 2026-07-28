@@ -17,4 +17,19 @@ public interface CityMapper {
      * 根据ID查询城市信息
      */
     City selectById(Long cityId);
+
+    /**
+     * 添加城市信息
+     */
+    int insert(City city);
+
+    /**
+     * 删除城市信息
+     */
+    int deleteById(Long cityId);
+
+    /**
+     * 查询城市是否存在
+     */
+    int checkCityExists(Long cityId);
 }

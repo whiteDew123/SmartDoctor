@@ -32,4 +32,31 @@ public class CityController {
         City city = cityService.getById(cityId);
         return Result.success(city);
     }
+
+    /**
+     * 添加城市信息
+     */
+    @PostMapping("/add")
+    public Result<Void> add(@RequestBody City city) {
+        cityService.add(city);
+        return Result.success();
+    }
+
+    /**
+     * 删除城市信息
+     */
+    @DeleteMapping("/{cityId}")
+    public Result<Void> delete(@PathVariable Long cityId) {
+        cityService.delete(cityId);
+        return Result.success();
+    }
+
+    /**
+     * 查询城市是否存在
+     */
+    @GetMapping("/exists/{cityId}")
+    public Result<Boolean> checkExists(@PathVariable Long cityId) {
+        boolean exists = cityService.checkExists(cityId);
+        return Result.success(exists);
+    }
 }
