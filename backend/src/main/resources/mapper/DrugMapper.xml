@@ -21,4 +21,24 @@
         SELECT * FROM drug WHERE drug_id = #{drugId}
     </select>
 
+    <insert id="insert" parameterType="com.qst.medical.entity.Drug" useGeneratedKeys="true" keyProperty="drugId">
+        INSERT INTO drug (drug_name, drug_info, drug_effect, drug_img, publisher, createtime, updatetime)
+        VALUES (#{drugName}, #{drugInfo}, #{drugEffect}, #{drugImg}, #{publisher}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById" parameterType="com.qst.medical.entity.Drug">
+        UPDATE drug
+        SET drug_name = #{drugName},
+            drug_info = #{drugInfo},
+            drug_effect = #{drugEffect},
+            drug_img = #{drugImg},
+            publisher = #{publisher},
+            updatetime = NOW()
+        WHERE drug_id = #{drugId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM drug WHERE drug_id = #{drugId}
+    </delete>
+
 </mapper>

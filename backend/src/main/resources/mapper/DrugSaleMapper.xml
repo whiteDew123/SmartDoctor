@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.DrugSaleMapper">
+
+    <resultMap id="BaseResultMap" type="com.qst.medical.entity.DrugSale">
+        <id column="id" property="id"/>
+        <result column="drug_id" property="drugId"/>
+        <result column="sale_id" property="saleId"/>
+    </resultMap>
+
+    <select id="selectByDrugId" resultMap="BaseResultMap">
+        SELECT * FROM drug_sale WHERE drug_id = #{drugId}
+    </select>
+
+    <insert id="insert" parameterType="com.qst.medical.entity.DrugSale">
+        INSERT INTO drug_sale (drug_id, sale_id)
+        VALUES (#{drugId}, #{saleId})
+    </insert>
+
+    <delete id="deleteByDrugId">
+        DELETE FROM drug_sale WHERE drug_id = #{drugId}
+    </delete>
+
+    <insert id="batchInsert">
+        INSERT INTO drug_sale (drug_id, sale_id) VALUES
+        <foreach collection="saleIds" item="saleId" separator=",">
+            (#{drugId}, #{saleId})
+        </foreach>
+    </insert>
+
+</mapper>
