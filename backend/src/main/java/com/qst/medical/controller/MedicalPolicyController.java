@@ -2,6 +2,7 @@ package com.qst.medical.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.qst.medical.common.Result;
+import com.qst.medical.entity.MedicalPolicy;
 import com.qst.medical.model.MedicalPolicyModel;
 import com.qst.medical.param.MedicalPolicyParam;
 import com.qst.medical.service.MedicalPolicyService;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 医保政策 REST 接口控制器
- * 提供医保政策的分页查询和详情查询 API
+ * 提供医保政策的分页查询、详情查询、添加、修改和删除 API
  * 所有接口需要登录后才能访问（由 SecurityConfig 统一控制）
  */
 @RestController
@@ -60,5 +61,84 @@ public class MedicalPolicyController {
     @GetMapping("/{id}")
     public Result<MedicalPolicyModel> getById(@PathVariable Long id) {
         return Result.success(medicalPolicyService.getById(id));
+    }
+
+    /**
+     * 添加医保政策
+     * 请求方式：POST，请求体为 JSON 格式
+     *
+     * 请求示例：POST /api/medical-policy
+     * Body: {
+     *   "title": "2025年度医保新政策",
+     *   "message": "政策详细内容...",
+     *   "cityId": 1,
+     *   "createTime": "2025-01-01",
+     *   "updateTime": "2025-01-01"
+     * }
+     *
+     * @param medicalPolicy 医保政策实体，id 由数据库自增生成无需传入
+     * @return 统一响应格式 Result 包裹添加后的医保政策（含自增 ID）
+     */
+    @PostMapping
+    public Result<MedicalPolicy> save(@RequestBody MedicalPolicy medicalPolicy) {
+        return Result.success(medicalPolicyService.save(medicalPolicy));
+    }
+
+    /**
+     * 修改医保政策（URL 路径传 ID）
+     * 请求方式：PUT，请求体为 JSON 格式
+     *
+     * 请求示例：PUT /api/medical-policy/1
+     * Body: {
+     *   "title": "修改后的标题",
+     *   "message": "修改后的内容",
+     *   "cityId": 2,
+     *   "updateTime": "2025-06-01"
+     * }
+     *
+     * @param id             医保政策主键 ID，从 URL 路径中提取
+     * @param medicalPolicy  医保政策实体，包含要修改的字段
+     * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功）
+     */
+    @PutMapping("/{id}")
+    public Result<Integer> update(@PathVariable Long id, @RequestBody MedicalPolicy medicalPolicy) {
+        medicalPolicy.setId(id);
+        return Result.success(medicalPolicyService.update(medicalPolicy));
+    }
+
+    /**
+     * 修改医保政策（请求体传 ID）
+     * 请求方式：PUT，请求体为 JSON 格式
+     * 兼容 Swagger 等工具将 id 放在请求体中的场景
+     *
+     * 请求示例：PUT /api/medical-policy
+     * Body: {
+     *   "id": 1,
+     *   "title": "修改后的标题",
+     *   "message": "修改后的内容",
+     *   "cityId": 2,
+     *   "updateTime": "2025-06-01"
+     * }
+     *
+     * @param medicalPolicy 医保政策实体，id 为必填字段用于定位记录
+     * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功）
+     */
+    @PutMapping
+    public Result<Integer> updateById(@RequestBody MedicalPolicy medicalPolicy) {
+        return Result.success(medicalPolicyService.update(medicalPolicy));
+    }
+
+    /**
+     * 删除医保政策
+     * 请求方式：DELETE
+     *
+     * 请求示例：DELETE /api/medical-policy/1
+     *
+     * @param id 医保政策主键 ID，从 URL 路径中提取
+     * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    @DeleteMapping("/{id}")
+    public Result<Integer> deleteById(@PathVariable Long id) {
+        return Result.success(medicalPolicyService.deleteById(id));
     }
 }

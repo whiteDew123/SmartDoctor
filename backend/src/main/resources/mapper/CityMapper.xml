@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.CityMapper">
+
+    <!-- 根据城市 ID 删除城市信息 -->
+    <delete id="deleteByCityId">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
+
+</mapper>

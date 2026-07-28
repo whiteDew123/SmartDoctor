@@ -70,4 +70,36 @@
         LEFT JOIN china ch ON ct.city_number = ch.id
         WHERE mp.id = #{id}
     </select>
+
+    <!-- ==================== 新增语句 ==================== -->
+
+    <!-- 添加医保政策：自增 ID 由数据库自动生成 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO medical_policy (title, message, city_id, create_time, update_time)
+        VALUES (#{title}, #{message}, #{cityId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- ==================== 修改语句 ==================== -->
+
+    <!-- 修改医保政策：根据 ID 更新标题、内容、城市 ID 和更新时间 -->
+    <update id="update">
+        UPDATE medical_policy
+        SET title = #{title},
+            message = #{message},
+            city_id = #{cityId},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- ==================== 删除语句 ==================== -->
+
+    <!-- 根据 ID 删除单条医保政策 -->
+    <delete id="deleteById">
+        DELETE FROM medical_policy WHERE id = #{id}
+    </delete>
+
+    <!-- 根据城市 ID 删除该城市下所有医保政策（级联删除） -->
+    <delete id="deleteByCityId">
+        DELETE FROM medical_policy WHERE city_id = #{cityId}
+    </delete>
 </mapper>

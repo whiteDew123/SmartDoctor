@@ -1,5 +1,6 @@
 package com.qst.medical.mapper;
 
+import com.qst.medical.entity.MedicalPolicy;
 import com.qst.medical.model.MedicalPolicyModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,4 +33,37 @@ public interface MedicalPolicyMapper {
      * @return 医保政策模型（含城市信息），未找到则返回 null
      */
     MedicalPolicyModel selectById(Long id);
+
+    /**
+     * 添加医保政策
+     *
+     * @param medicalPolicy 医保政策实体，包含标题、内容、城市 ID、创建时间、更新时间
+     * @return 受影响的行数（1 表示成功）
+     */
+    int insert(MedicalPolicy medicalPolicy);
+
+    /**
+     * 修改医保政策
+     *
+     * @param medicalPolicy 医保政策实体，包含要修改的字段和主键 ID
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    int update(MedicalPolicy medicalPolicy);
+
+    /**
+     * 根据 ID 删除医保政策
+     *
+     * @param id 医保政策主键 ID
+     * @return 受影响的行数（1 表示成功，0 表示记录不存在）
+     */
+    int deleteById(Long id);
+
+    /**
+     * 根据城市 ID 删除该城市下所有医保政策
+     * 用于删除城市时级联删除关联的医保政策
+     *
+     * @param cityId 城市 ID
+     * @return 受影响的行数
+     */
+    int deleteByCityId(Long cityId);
 }
