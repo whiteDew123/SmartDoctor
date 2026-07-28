@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.PermissionMapper">
+
+    <select id="getPermission" parameterType="string" resultType="com.qst.medical.entity.Permission">
+        SELECT p.* FROM permission p
+        JOIN role_permission rp ON p.id = rp.per_id
+        WHERE rp.roleName = #{roleName}
+        ORDER BY p.level, p.id
+    </select>
+
+</mapper>
