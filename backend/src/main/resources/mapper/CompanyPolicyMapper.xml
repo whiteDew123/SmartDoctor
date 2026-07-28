@@ -30,4 +30,33 @@
         SELECT * FROM company_policy WHERE id = #{id}
     </select>
 
+    <!-- 添加医药公司政策 -->
+    <insert id="insert" parameterType="com.qst.medical.entity.CompanyPolicy">
+        INSERT INTO company_policy (title, message, company_id, create_time, update_time)
+        VALUES (#{title}, #{message}, #{companyId}, NOW(), NOW())
+    </insert>
+
+    <!-- 修改医药公司政策 -->
+    <update id="update" parameterType="com.qst.medical.entity.CompanyPolicy">
+        UPDATE company_policy
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="message != null and message != ''">
+                message = #{message},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除医药公司政策 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM company_policy WHERE id = #{id}
+    </delete>
+
 </mapper>

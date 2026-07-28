@@ -34,4 +34,31 @@ public class CompanyPolicyController {
         CompanyPolicy companyPolicy = companyPolicyService.getById(id);
         return Result.success(companyPolicy);
     }
+
+    /**
+     * 添加医药公司政策
+     */
+    @PostMapping("/add")
+    public Result<Void> add(@RequestBody CompanyPolicy companyPolicy) {
+        companyPolicyService.add(companyPolicy);
+        return Result.success();
+    }
+
+    /**
+     * 修改医药公司政策
+     */
+    @PutMapping("/update")
+    public Result<Void> update(@RequestBody CompanyPolicy companyPolicy) {
+        companyPolicyService.update(companyPolicy);
+        return Result.success();
+    }
+
+    /**
+     * 删除医药公司政策
+     */
+    @DeleteMapping("/{id}")
+    public Result<Void> delete(@PathVariable Long id) {
+        companyPolicyService.delete(id);
+        return Result.success();
+    }
 }

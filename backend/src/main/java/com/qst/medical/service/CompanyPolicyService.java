@@ -30,4 +30,25 @@ public class CompanyPolicyService {
     public CompanyPolicy getById(Long id) {
         return companyPolicyMapper.selectById(id);
     }
+
+    /**
+     * 添加医药公司政策
+     */
+    public int add(CompanyPolicy companyPolicy) {
+        return companyPolicyMapper.insert(companyPolicy);
+    }
+
+    /**
+     * 修改医药公司政策
+     */
+    public int update(CompanyPolicy companyPolicy) {
+        return companyPolicyMapper.update(companyPolicy);
+    }
+
+    /**
+     * 删除医药公司政策
+     */
+    public int delete(Long id) {
+        return companyPolicyMapper.deleteById(id);
+    }
 }

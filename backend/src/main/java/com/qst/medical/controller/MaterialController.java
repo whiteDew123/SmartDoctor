@@ -32,4 +32,34 @@ public class MaterialController {
         Material material = materialService.getById(id);
         return Result.success(material);
     }
+
+    @PostMapping("/add")
+    public Result<Integer> addMaterial(@RequestBody Material material) {
+        int result = materialService.addMaterial(material);
+        if (result > 0) {
+            return Result.success(result);
+        } else {
+            return Result.error("添加失败");
+        }
+    }
+
+    @PutMapping("/update")
+    public Result<Integer> updateMaterial(@RequestBody Material material) {
+        int result = materialService.updateMaterial(material);
+        if (result > 0) {
+            return Result.success(result);
+        } else {
+            return Result.error("修改失败");
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result<Integer> deleteMaterial(@PathVariable Long id) {
+        int result = materialService.deleteMaterial(id);
+        if (result > 0) {
+            return Result.success(result);
+        } else {
+            return Result.error("删除失败");
+        }
+    }
 }

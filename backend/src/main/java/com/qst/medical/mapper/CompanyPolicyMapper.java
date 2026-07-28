@@ -19,4 +19,19 @@ public interface CompanyPolicyMapper {
      * 根据ID查询医药公司政策
      */
     CompanyPolicy selectById(Long id);
+
+    /**
+     * 添加医药公司政策
+     */
+    int insert(CompanyPolicy companyPolicy);
+
+    /**
+     * 修改医药公司政策
+     */
+    int update(CompanyPolicy companyPolicy);
+
+    /**
+     * 删除医药公司政策
+     */
+    int deleteById(Long id);
 }
