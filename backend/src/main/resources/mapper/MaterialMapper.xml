@@ -24,4 +24,21 @@
            OR message LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
+    <insert id="insert" parameterType="com.qst.medical.entity.Material" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO material (title, message, create_time, update_time)
+        VALUES (#{title}, #{message}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="com.qst.medical.entity.Material">
+        UPDATE material 
+        SET title = #{title}, 
+            message = #{message}, 
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM material WHERE id = #{id}
+    </delete>
+
 </mapper>
