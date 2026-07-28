@@ -7,6 +7,7 @@ import com.qst.medical.entity.MaterialPageInfo;
 import com.qst.medical.mapper.MaterialMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 @Service
 public class MaterialService {
@@ -34,5 +35,21 @@ public class MaterialService {
 
     public Material getById(Long id) {
         return materialMapper.selectById(id);
+    }
+
+    public int addMaterial(Material material) {
+        LocalDateTime now = LocalDateTime.now();
+        material.setCreateTime(now);
+        material.setUpdateTime(now);
+        return materialMapper.insert(material);
+    }
+
+    public int updateMaterial(Material material) {
+        material.setUpdateTime(LocalDateTime.now());
+        return materialMapper.update(material);
+    }
+
+    public int deleteMaterial(Long id) {
+        return materialMapper.deleteById(id);
     }
 }
