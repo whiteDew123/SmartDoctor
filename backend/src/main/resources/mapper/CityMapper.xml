@@ -19,4 +19,20 @@
         SELECT * FROM city WHERE city_id = #{cityId}
     </select>
 
+    <!-- 添加城市信息 -->
+    <insert id="insert" parameterType="com.qst.medical.entity.City">
+        INSERT INTO city (city_number, createtime, updatetime)
+        VALUES (#{cityNumber}, NOW(), NOW())
+    </insert>
+
+    <!-- 删除城市信息 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
+
+    <!-- 查询城市是否存在 -->
+    <select id="checkCityExists" resultType="int">
+        SELECT COUNT(1) FROM city WHERE city_id = #{cityId}
+    </select>
+
 </mapper>
