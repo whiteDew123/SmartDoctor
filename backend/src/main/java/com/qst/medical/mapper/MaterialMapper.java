@@ -13,4 +13,10 @@ public interface MaterialMapper {
     Material selectById(Long id);
 
     List<Material> selectByKeyword(@Param("keyword") String keyword);
+
+    int insert(Material material);
+
+    int update(Material material);
+
+    int deleteById(Long id);
 }
