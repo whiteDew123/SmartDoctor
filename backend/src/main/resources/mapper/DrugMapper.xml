@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.DrugMapper">
+
+    <resultMap id="BaseResultMap" type="com.qst.medical.entity.Drug">
+        <id column="drug_id" property="drugId"/>
+        <result column="drug_name" property="drugName"/>
+        <result column="drug_info" property="drugInfo"/>
+        <result column="drug_effect" property="drugEffect"/>
+        <result column="drug_img" property="drugImg"/>
+        <result column="publisher" property="publisher"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM drug
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM drug WHERE drug_id = #{drugId}
+    </select>
+
+</mapper>
