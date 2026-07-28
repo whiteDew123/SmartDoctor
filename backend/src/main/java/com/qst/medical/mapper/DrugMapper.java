@@ -10,4 +10,10 @@ public interface DrugMapper {
     List<Drug> selectAll();
 
     Drug selectById(Long drugId);
+
+    int insert(Drug drug);
+
+    int updateById(Drug drug);
+
+    int deleteById(Long drugId);
 }
