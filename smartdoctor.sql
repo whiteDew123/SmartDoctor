@@ -153,6 +153,7 @@ CREATE TABLE `doctor`  (
   `age` int NULL DEFAULT NULL COMMENT '年龄',
   `hospital` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '所属医院',
   `level_id` bigint NULL DEFAULT NULL COMMENT '医师级别id',
+  `type_id` bigint NULL DEFAULT NULL COMMENT '诊治类型id',
   `createtime` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '医生表' ROW_FORMAT = Dynamic;
@@ -160,9 +161,9 @@ CREATE TABLE `doctor`  (
 -- ----------------------------
 -- Records of doctor
 -- ----------------------------
-INSERT INTO `doctor` VALUES (1, 2, 45, '北京市朝阳医院', 1, '2026-07-28 10:46:51.000000');
-INSERT INTO `doctor` VALUES (2, 3, 38, '上海市浦东医院', 2, '2026-07-28 10:46:51.000000');
-INSERT INTO `doctor` VALUES (3, 4, 32, '广州市第一人民医院', 3, '2026-07-28 10:46:51.000000');
+INSERT INTO `doctor` VALUES (1, 2, 45, '北京市朝阳医院', 1, 1, '2026-07-28 10:46:51.000000');
+INSERT INTO `doctor` VALUES (2, 3, 38, '上海市浦东医院', 2, 2, '2026-07-28 10:46:51.000000');
+INSERT INTO `doctor` VALUES (3, 4, 32, '广州市第一人民医院', 3, 3, '2026-07-28 10:46:51.000000');
 
 -- ----------------------------
 -- Table structure for doctor_level
