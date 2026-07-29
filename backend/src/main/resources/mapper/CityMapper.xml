@@ -19,8 +19,24 @@
         SELECT * FROM city WHERE city_id = #{cityId}
     </select>
 
-    <!-- 根据ID删除城市 -->
+    <!-- 根据ID删除城市（级联删除用） -->
     <delete id="deleteByCityId">
         DELETE FROM city WHERE city_id = #{cityId}
     </delete>
+
+    <!-- 添加城市信息 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="cityId">
+        INSERT INTO city (city_number, createtime, updatetime)
+        VALUES (#{cityNumber}, NOW(), NOW())
+    </insert>
+
+    <!-- 删除城市信息 -->
+    <delete id="deleteById">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
+
+    <!-- 查询城市是否存在 -->
+    <select id="checkCityExists" resultType="int">
+        SELECT COUNT(*) FROM city WHERE city_id = #{cityId}
+    </select>
 </mapper>

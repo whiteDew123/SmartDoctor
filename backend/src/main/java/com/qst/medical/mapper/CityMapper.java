@@ -19,7 +19,22 @@ public interface CityMapper {
     City selectById(Long cityId);
 
     /**
-     * 根据ID删除城市
+     * 根据ID删除城市（级联删除用）
      */
     int deleteByCityId(Long cityId);
+
+    /**
+     * 添加城市信息
+     */
+    int insert(City city);
+
+    /**
+     * 删除城市信息
+     */
+    int deleteById(Long cityId);
+
+    /**
+     * 查询城市是否存在
+     */
+    int checkCityExists(Long cityId);
 }
