@@ -2,39 +2,22 @@ package com.qst.medical.mapper;
 
 import com.qst.medical.entity.City;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
 public interface CityMapper {
 
-    /**
-     * 查询所有城市信息
-     */
     List<City> selectAll();
 
-    /**
-     * 根据ID查询城市信息
-     */
-    City selectById(Long cityId);
+    City selectById(@Param("cityId") Long cityId);
 
-    /**
-     * 根据ID删除城市（级联删除用）
-     */
-    int deleteByCityId(Long cityId);
+    int deleteByCityId(@Param("cityId") Long cityId);
 
-    /**
-     * 添加城市信息
-     */
     int insert(City city);
 
-    /**
-     * 删除城市信息
-     */
-    int deleteById(Long cityId);
+    int deleteById(@Param("cityId") Long cityId);
 
-    /**
-     * 查询城市是否存在
-     */
-    int checkCityExists(Long cityId);
+    int checkCityExists(@Param("cityId") Long cityId);
 }

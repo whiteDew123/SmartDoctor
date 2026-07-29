@@ -43,11 +43,11 @@ public class CityController {
     }
 
     /**
-     * 删除城市信息
+     * 删除城市信息（级联删除该城市下的所有医保政策）
      */
     @DeleteMapping("/{cityId}")
     public Result<Void> delete(@PathVariable Long cityId) {
-        cityService.delete(cityId);
+        cityService.deleteCity(cityId);
         return Result.success();
     }
 
