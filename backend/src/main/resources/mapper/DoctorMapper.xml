@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.DoctorMapper">
+
+    <resultMap id="DoctorResultMap" type="com.qst.medical.vo.Doctor">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="sex" property="sex"/>
+        <result column="level_id" property="levelId"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="type_id" property="typeId"/>
+        <result column="account_id" property="accountId"/>
+        <result column="treat_type" property="treatType"/>
+        <result column="doctor_level" property="doctorLevel"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        d.id,
+        a.realname as name,
+        a.phonenumber as phone_number,
+        a.id as account_id,
+        d.age,
+        d.level_id,
+        d.type_id,
+        tt.name as treat_type,
+        dl.name as doctor_level
+    </sql>
+
+    <sql id="Base_Join">
+        LEFT JOIN account a ON d.account_id = a.id
+        LEFT JOIN treat_type tt ON d.type_id = tt.id
+        LEFT JOIN doctor_level dl ON d.level_id = dl.id
+    </sql>
+
+    <select id="selectDoctorList" resultMap="DoctorResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM doctor d
+        <include refid="Base_Join"/>
+        <where>
+            <if test="param.keyword != null and param.keyword != ''">
+                AND (a.realname LIKE CONCAT('%', #{param.keyword}, '%')
+                OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
+                OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY d.id DESC
+        LIMIT #{offset}, #{param.size}
+    </select>
+
+    <select id="countDoctor" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor d
+        <include refid="Base_Join"/>
+        <where>
+            <if test="param.keyword != null and param.keyword != ''">
+                AND (a.realname LIKE CONCAT('%', #{param.keyword}, '%')
+                OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
+                OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllDoctorLevels" resultType="com.qst.medical.entity.DoctorLevelEntity">
+        SELECT id, name FROM doctor_level
+    </select>
+
+    <select id="selectAllTreatTypes" resultType="com.qst.medical.entity.TreatTypeEntity">
+        SELECT id, name FROM treat_type
+    </select>
+
+</mapper>

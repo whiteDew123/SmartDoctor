@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS doctor (
     age INT(11) DEFAULT NULL COMMENT '年龄',
     hospital VARCHAR(255) DEFAULT NULL COMMENT '所属医院',
     level_id BIGINT(20) DEFAULT NULL COMMENT '医师级别id',
+    type_id BIGINT(20) DEFAULT NULL COMMENT '诊治类型id',
     createtime DATETIME(6) DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医生表';
