@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 城市信息业务逻辑层
- * 负责城市信息的查询和删除（级联删除关联的医保政策）
+ * 负责城市信息的查询、添加、删除（含级联删除医保政策）
  */
 @Service
 public class CityService {
@@ -37,6 +37,13 @@ public class CityService {
     }
 
     /**
+     * 添加城市信息
+     */
+    public int add(City city) {
+        return cityMapper.insert(city);
+    }
+
+    /**
      * 删除城市（级联删除该城市下的所有医保政策）
      * 使用 @Transactional 确保两个删除操作原子性：要么全部成功，要么全部回滚
      *
@@ -49,5 +56,19 @@ public class CityService {
         medicalPolicyMapper.deleteByCityId(cityId);
         // 再删除城市本身
         return cityMapper.deleteByCityId(cityId);
+    }
+
+    /**
+     * 删除城市信息（简单删除，不含级联）
+     */
+    public int delete(Long cityId) {
+        return cityMapper.deleteById(cityId);
+    }
+
+    /**
+     * 查询城市是否存在
+     */
+    public boolean checkExists(Long cityId) {
+        return cityMapper.checkCityExists(cityId) > 0;
     }
 }

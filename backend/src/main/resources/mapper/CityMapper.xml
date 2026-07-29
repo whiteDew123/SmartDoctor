@@ -37,6 +37,6 @@
 
     <!-- 查询城市是否存在 -->
     <select id="checkCityExists" resultType="int">
-        SELECT COUNT(*) FROM city WHERE city_id = #{cityId}
+        SELECT COUNT(1) FROM city WHERE city_id = #{cityId}
     </select>
 </mapper>
