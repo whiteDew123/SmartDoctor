@@ -1,6 +1,8 @@
 package com.qst.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 /**
  * 医保政策实体类
@@ -22,8 +24,10 @@ public class MedicalPolicy {
     private Long cityId;
 
     /** 创建时间 */
-    private String createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 
     /** 更新时间 */
-    private String updateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
 }

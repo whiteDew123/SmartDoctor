@@ -65,15 +65,13 @@ public class MedicalPolicyController {
 
     /**
      * 添加医保政策
-     * 请求方式：POST，请求体为 JSON 格式
+     * createTime 和 updateTime 由后端自动设置，无需传入
      *
      * 请求示例：POST /api/medical-policy
      * Body: {
      *   "title": "2025年度医保新政策",
      *   "message": "政策详细内容...",
-     *   "cityId": 1,
-     *   "createTime": "2025-01-01",
-     *   "updateTime": "2025-01-01"
+     *   "cityId": 1
      * }
      *
      * @param medicalPolicy 医保政策实体，id 由数据库自增生成无需传入
@@ -86,14 +84,13 @@ public class MedicalPolicyController {
 
     /**
      * 修改医保政策（URL 路径传 ID）
-     * 请求方式：PUT，请求体为 JSON 格式
+     * updateTime 由后端自动设置，无需传入
      *
      * 请求示例：PUT /api/medical-policy/1
      * Body: {
      *   "title": "修改后的标题",
      *   "message": "修改后的内容",
-     *   "cityId": 2,
-     *   "updateTime": "2025-06-01"
+     *   "cityId": 2
      * }
      *
      * @param id             医保政策主键 ID，从 URL 路径中提取
@@ -108,16 +105,15 @@ public class MedicalPolicyController {
 
     /**
      * 修改医保政策（请求体传 ID）
-     * 请求方式：PUT，请求体为 JSON 格式
      * 兼容 Swagger 等工具将 id 放在请求体中的场景
+     * updateTime 由后端自动设置，无需传入
      *
      * 请求示例：PUT /api/medical-policy
      * Body: {
      *   "id": 1,
      *   "title": "修改后的标题",
      *   "message": "修改后的内容",
-     *   "cityId": 2,
-     *   "updateTime": "2025-06-01"
+     *   "cityId": 2
      * }
      *
      * @param medicalPolicy 医保政策实体，id 为必填字段用于定位记录

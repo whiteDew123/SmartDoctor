@@ -44,13 +44,12 @@
 
     <!-- ==================== 查询语句 ==================== -->
 
-    <!-- 分页查询：使用 WHERE 1=1 避免 MyBatis <where> 标签与 PageHelper 兼容问题 -->
+    <!-- 分页查询：使用子查询获取城市名称，避免 LEFT JOIN 导致 PageHelper COUNT 解析异常 -->
     <select id="selectByPage" resultMap="BaseResultMap">
         SELECT mp.id, mp.title, mp.message, mp.city_id, mp.create_time, mp.update_time,
-               ch.name AS city_name, ct.city_number
+               (SELECT ch.name FROM city ct2 LEFT JOIN china ch ON ct2.city_number = ch.id WHERE ct2.city_id = mp.city_id) AS city_name,
+               (SELECT ct3.city_number FROM city ct3 WHERE ct3.city_id = mp.city_id) AS city_number
         FROM medical_policy mp
-        LEFT JOIN city ct ON mp.city_id = ct.city_id
-        LEFT JOIN china ch ON ct.city_number = ch.id
         WHERE 1=1
         <if test="title != null and title != ''">
             AND mp.title LIKE CONCAT('%', #{title}, '%')

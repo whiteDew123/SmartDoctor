@@ -32,7 +32,7 @@ public interface MedicalPolicyMapper {
      * @param id 医保政策主键 ID
      * @return 医保政策模型（含城市信息），未找到则返回 null
      */
-    MedicalPolicyModel selectById(Long id);
+    MedicalPolicyModel selectById(@Param("id") Long id);
 
     /**
      * 添加医保政策
@@ -56,7 +56,7 @@ public interface MedicalPolicyMapper {
      * @param id 医保政策主键 ID
      * @return 受影响的行数（1 表示成功，0 表示记录不存在）
      */
-    int deleteById(Long id);
+    int deleteById(@Param("id") Long id);
 
     /**
      * 根据城市 ID 删除该城市下所有医保政策
@@ -65,5 +65,5 @@ public interface MedicalPolicyMapper {
      * @param cityId 城市 ID
      * @return 受影响的行数
      */
-    int deleteByCityId(Long cityId);
+    int deleteByCityId(@Param("cityId") Long cityId);
 }

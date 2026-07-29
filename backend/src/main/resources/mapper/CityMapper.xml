@@ -19,14 +19,19 @@
         SELECT * FROM city WHERE city_id = #{cityId}
     </select>
 
+    <!-- 根据ID删除城市（级联删除用） -->
+    <delete id="deleteByCityId">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
+
     <!-- 添加城市信息 -->
-    <insert id="insert" parameterType="com.qst.medical.entity.City">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="cityId">
         INSERT INTO city (city_number, createtime, updatetime)
         VALUES (#{cityNumber}, NOW(), NOW())
     </insert>
 
     <!-- 删除城市信息 -->
-    <delete id="deleteById" parameterType="Long">
+    <delete id="deleteById">
         DELETE FROM city WHERE city_id = #{cityId}
     </delete>
 
@@ -34,5 +39,4 @@
     <select id="checkCityExists" resultType="int">
         SELECT COUNT(1) FROM city WHERE city_id = #{cityId}
     </select>
-
 </mapper>

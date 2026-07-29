@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,11 +31,15 @@ public class MedicalPolicyService {
      * @return PageInfo 分页对象，包含总条数、总页数、当前页数据等
      */
     public PageInfo<MedicalPolicyModel> getByPage(MedicalPolicyParam param) {
-        // 启动分页拦截，后续的第一个 SQL 查询将被自动分页
+        // 空值保护：防止 Apifox 等工具绕过默认值传入 null
+        if (param.getPageNum() == null) {
+            param.setPageNum(1);
+        }
+        if (param.getPageSize() == null) {
+            param.setPageSize(10);
+        }
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
-        // 执行查询（SQL 中不包含 LIMIT，由 PageHelper 自动追加）
         List<MedicalPolicyModel> list = medicalPolicyMapper.selectByPage(param.getTitle(), param.getCityId());
-        // 将查询结果封装为 PageInfo，自动计算总条数、总页数等
         return new PageInfo<>(list);
     }
 
@@ -56,6 +61,8 @@ public class MedicalPolicyService {
      */
     @Transactional(rollbackFor = Exception.class)
     public MedicalPolicy save(MedicalPolicy medicalPolicy) {
+        medicalPolicy.setCreateTime(LocalDateTime.now());
+        medicalPolicy.setUpdateTime(LocalDateTime.now());
         medicalPolicyMapper.insert(medicalPolicy);
         return medicalPolicy;
     }
@@ -68,6 +75,7 @@ public class MedicalPolicyService {
      */
     @Transactional(rollbackFor = Exception.class)
     public int update(MedicalPolicy medicalPolicy) {
+        medicalPolicy.setUpdateTime(LocalDateTime.now());
         return medicalPolicyMapper.update(medicalPolicy);
     }
 
