@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 医保政策 SQL 映射文件，对应接口 com.qst.medical.mapper.MedicalPolicyMapper -->
+<mapper namespace="com.qst.medical.mapper.MedicalPolicyMapper">
+
+    <!-- ==================== 结果映射 ==================== -->
+    <!-- 将数据库查询列映射到 MedicalPolicyModel 属性
+         city_name、city_number、mer_name 为联表查询的附加字段 -->
+    <resultMap id="BaseResultMap" type="com.qst.medical.model.MedicalPolicyModel">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="message" property="message"/>
+        <result column="city_id" property="cityId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="city_name" property="cityName"/>
+        <result column="city_number" property="cityNumber"/>
+    </resultMap>
+
+    <!-- ==================== 公共 SQL 片段 ==================== -->
+
+    <!-- 查询字段：医保政策字段 + 联表城市名称 -->
+    <sql id="selectColumns">
+        mp.id,
+        mp.title,
+        mp.message,
+        mp.city_id,
+        mp.create_time,
+        mp.update_time,
+        ch.name AS city_name,
+        ct.city_number
+    </sql>
+
+    <!-- 关联表：medical_policy 左连接 city、china 获取城市名称 -->
+    <sql id="fromTables">
+        FROM medical_policy mp
+        LEFT JOIN city ct ON mp.city_id = ct.city_id
+        LEFT JOIN china ch ON ct.city_number = ch.id
+    </sql>
+
+    <!-- 动态查询条件：支持按标题模糊搜索和城市 ID 精确筛选（已废弃，改为内联 WHERE 1=1） -->
+    <sql id="whereConditions">
+    </sql>
+
+    <!-- ==================== 查询语句 ==================== -->
+
+    <!-- 分页查询：使用 WHERE 1=1 避免 MyBatis <where> 标签与 PageHelper 兼容问题 -->
+    <select id="selectByPage" resultMap="BaseResultMap">
+        SELECT mp.id, mp.title, mp.message, mp.city_id, mp.create_time, mp.update_time,
+               ch.name AS city_name, ct.city_number
+        FROM medical_policy mp
+        LEFT JOIN city ct ON mp.city_id = ct.city_id
+        LEFT JOIN china ch ON ct.city_number = ch.id
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND mp.title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="cityId != null">
+            AND mp.city_id = #{cityId}
+        </if>
+        ORDER BY mp.create_time DESC
+    </select>
+
+    <!-- 根据 ID 查询详情 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT mp.id, mp.title, mp.message, mp.city_id, mp.create_time, mp.update_time,
+               ch.name AS city_name, ct.city_number
+        FROM medical_policy mp
+        LEFT JOIN city ct ON mp.city_id = ct.city_id
+        LEFT JOIN china ch ON ct.city_number = ch.id
+        WHERE mp.id = #{id}
+    </select>
+
+    <!-- ==================== 新增语句 ==================== -->
+
+    <!-- 添加医保政策：自增 ID 由数据库自动生成 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO medical_policy (title, message, city_id, create_time, update_time)
+        VALUES (#{title}, #{message}, #{cityId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- ==================== 修改语句 ==================== -->
+
+    <!-- 修改医保政策：根据 ID 更新标题、内容、城市 ID 和更新时间 -->
+    <update id="update">
+        UPDATE medical_policy
+        SET title = #{title},
+            message = #{message},
+            city_id = #{cityId},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- ==================== 删除语句 ==================== -->
+
+    <!-- 根据 ID 删除单条医保政策 -->
+    <delete id="deleteById">
+        DELETE FROM medical_policy WHERE id = #{id}
+    </delete>
+
+    <!-- 根据城市 ID 删除该城市下所有医保政策（级联删除） -->
+    <delete id="deleteByCityId">
+        DELETE FROM medical_policy WHERE city_id = #{cityId}
+    </delete>
+</mapper>

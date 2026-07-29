@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.CityMapper">
+
+    <resultMap id="BaseResultMap" type="com.qst.medical.entity.City">
+        <id column="city_id" property="cityId"/>
+        <result column="city_number" property="cityNumber"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+    </resultMap>
+
+    <!-- 查询所有城市信息 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM city ORDER BY city_id ASC
+    </select>
+
+    <!-- 根据ID查询城市信息 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM city WHERE city_id = #{cityId}
+    </select>
+
+    <!-- 添加城市信息 -->
+    <insert id="insert" parameterType="com.qst.medical.entity.City">
+        INSERT INTO city (city_number, createtime, updatetime)
+        VALUES (#{cityNumber}, NOW(), NOW())
+    </insert>
+
+    <!-- 删除城市信息 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
+
+    <!-- 查询城市是否存在 -->
+    <select id="checkCityExists" resultType="int">
+        SELECT COUNT(1) FROM city WHERE city_id = #{cityId}
+    </select>
+
+</mapper>

@@ -1,0 +1,35 @@
+package com.qst.medical.mapper;
+
+import com.qst.medical.entity.City;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+@Mapper
+public interface CityMapper {
+
+    /**
+     * 查询所有城市信息
+     */
+    List<City> selectAll();
+
+    /**
+     * 根据ID查询城市信息
+     */
+    City selectById(Long cityId);
+
+    /**
+     * 添加城市信息
+     */
+    int insert(City city);
+
+    /**
+     * 删除城市信息
+     */
+    int deleteById(Long cityId);
+
+    /**
+     * 查询城市是否存在
+     */
+    int checkCityExists(Long cityId);
+}

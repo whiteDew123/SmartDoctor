@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.CompanyPolicyMapper">
+
+    <resultMap id="BaseResultMap" type="com.qst.medical.entity.CompanyPolicy">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="message" property="message"/>
+        <result column="company_id" property="companyId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 根据查询条件查询医药公司政策列表 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT * FROM company_policy
+        <where>
+            <if test="title != null and title != ''">
+                AND title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询医药公司政策 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM company_policy WHERE id = #{id}
+    </select>
+
+    <!-- 添加医药公司政策 -->
+    <insert id="insert" parameterType="com.qst.medical.entity.CompanyPolicy">
+        INSERT INTO company_policy (title, message, company_id, create_time, update_time)
+        VALUES (#{title}, #{message}, #{companyId}, NOW(), NOW())
+    </insert>
+
+    <!-- 修改医药公司政策 -->
+    <update id="update" parameterType="com.qst.medical.entity.CompanyPolicy">
+        UPDATE company_policy
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="message != null and message != ''">
+                message = #{message},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除医药公司政策 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM company_policy WHERE id = #{id}
+    </delete>
+
+</mapper>
