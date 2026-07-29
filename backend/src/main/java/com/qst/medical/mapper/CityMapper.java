@@ -17,4 +17,9 @@ public interface CityMapper {
      * 根据ID查询城市信息
      */
     City selectById(Long cityId);
+
+    /**
+     * 根据ID删除城市
+     */
+    int deleteByCityId(Long cityId);
 }

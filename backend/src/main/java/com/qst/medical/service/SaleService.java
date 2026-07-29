@@ -30,6 +30,13 @@ public class SaleService {
      * @return PageInfo 分页对象，包含总条数、总页数、当前页数据等
      */
     public PageInfo<Sale> getByPage(SaleParam param) {
+        // 空值保护：防止 Apifox 等工具绕过默认值传入 null
+        if (param.getPageNum() == null) {
+            param.setPageNum(1);
+        }
+        if (param.getPageSize() == null) {
+            param.setPageSize(10);
+        }
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
         List<Sale> list = saleMapper.selectByPage(param.getSaleName(), param.getSalePhone());
         return new PageInfo<>(list);

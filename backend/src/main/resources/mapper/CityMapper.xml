@@ -19,4 +19,8 @@
         SELECT * FROM city WHERE city_id = #{cityId}
     </select>
 
+    <!-- 根据ID删除城市 -->
+    <delete id="deleteByCityId">
+        DELETE FROM city WHERE city_id = #{cityId}
+    </delete>
 </mapper>
