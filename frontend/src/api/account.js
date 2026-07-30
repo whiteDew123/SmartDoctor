@@ -7,3 +7,19 @@ export function login(data) {
     data
   })
 }
+
+export function register(data) {
+  return request({
+    url: '/account/register',
+    method: 'post',
+    data
+  })
+}
+
+export function forgotPassword(data) {
+  return request({
+    url: '/account/forgot-password',
+    method: 'post',
+    data
+  })
+}

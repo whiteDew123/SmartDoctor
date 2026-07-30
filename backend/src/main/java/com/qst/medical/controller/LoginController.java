@@ -29,6 +29,8 @@ public class LoginController {
     public Result<Map<String, Object>> login(@RequestBody Map<String, String> params) {
         String uname = params.get("uname");
         String pwd = params.get("pwd");
+        // 前端选择的角色：1管理员，2医生，3患者
+        String role = params.get("role");
 
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -37,6 +39,15 @@ public class LoginController {
 
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
             Account account = userDetails.getAccount();
+
+            // 角色校验：若前端选择了角色，则账户角色必须与所选角色一致
+            if (role != null && !role.trim().isEmpty()
+                    && !role.trim().equals(account.getUtype())) {
+                String roleText = "1".equals(account.getUtype()) ? "管理员"
+                        : "2".equals(account.getUtype()) ? "医生" : "患者";
+                return Result.error("该账号是" + roleText + "，请选择正确的角色登录");
+            }
+
             String token = JwtUtil.getJwtToken(account.getId(), account.getUname(), account.getUtype());
             Map<String, Object> data = new HashMap<>();
             data.put("token", token);
