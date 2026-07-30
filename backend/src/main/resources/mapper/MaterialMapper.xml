@@ -11,7 +11,7 @@
     </resultMap>
 
     <select id="selectAll" resultMap="BaseResultMap">
-        SELECT * FROM material
+        SELECT * FROM material ORDER BY id ASC
     </select>
 
     <select id="selectById" resultMap="BaseResultMap">
@@ -19,9 +19,10 @@
     </select>
 
     <select id="selectByKeyword" resultMap="BaseResultMap">
-        SELECT * FROM material 
-        WHERE title LIKE CONCAT('%', #{keyword}, '%') 
+        SELECT * FROM material
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
            OR message LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY id ASC
     </select>
 
     <insert id="insert" parameterType="com.qst.medical.entity.Material" useGeneratedKeys="true" keyProperty="id">
@@ -30,9 +31,9 @@
     </insert>
 
     <update id="update" parameterType="com.qst.medical.entity.Material">
-        UPDATE material 
-        SET title = #{title}, 
-            message = #{message}, 
+        UPDATE material
+        SET title = #{title},
+            message = #{message},
             update_time = #{updateTime}
         WHERE id = #{id}
     </update>

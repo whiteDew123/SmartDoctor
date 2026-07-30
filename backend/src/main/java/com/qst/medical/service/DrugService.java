@@ -24,6 +24,11 @@ public class DrugService {
     public DrugPageInfo getDrugPageInfo(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         Page<Drug> page = (Page<Drug>) drugMapper.selectAll();
+        // 为每个药品查询关联的销售地点ID
+        for (Drug drug : page.getResult()) {
+            List<Long> saleIds = drugSaleMapper.selectSaleIdsByDrugId(drug.getDrugId());
+            drug.setSaleIds(saleIds);
+        }
         DrugPageInfo drugPageInfo = new DrugPageInfo();
         drugPageInfo.setTotal(page.getTotal());
         drugPageInfo.setList(page.getResult());
@@ -31,7 +36,12 @@ public class DrugService {
     }
 
     public Drug getById(Long drugId) {
-        return drugMapper.selectById(drugId);
+        Drug drug = drugMapper.selectById(drugId);
+        if (drug != null) {
+            List<Long> saleIds = drugSaleMapper.selectSaleIdsByDrugId(drug.getDrugId());
+            drug.setSaleIds(saleIds);
+        }
+        return drug;
     }
 
     @Transactional
