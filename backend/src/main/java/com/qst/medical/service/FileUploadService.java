@@ -12,7 +12,7 @@ import java.util.UUID;
 @Service
 public class FileUploadService {
 
-    private static final String UPLOAD_PATH = "C:/Users/何少升/Pictures/medical/";
+    private static final String UPLOAD_PATH = System.getProperty("user.dir") + "/uploads/medical/";
 
     public String upload(MultipartFile file) {
         try {
@@ -35,7 +35,7 @@ public class FileUploadService {
                 }
             }
 
-            String url = "http://localhost:8080/image/" + fileName;
+            String url = "/image/" + fileName;
             return url;
         } catch (Exception e) {
             throw new RuntimeException("文件上传失败：" + e.getMessage());

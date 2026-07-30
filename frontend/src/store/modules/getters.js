@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { useAppStore } from './app'
 import { useUserStore } from '@/store/user'
+import { useDrugStore } from './drug'
 
 /**
  * 集中式 getters 入口。
@@ -10,6 +11,7 @@ import { useUserStore } from '@/store/user'
 export const useGettersStore = defineStore('getters', () => {
   const appStore = useAppStore()
   const userStore = useUserStore()
+  const drugStore = useDrugStore()
 
   const routes = computed(() => appStore.dynamicRoutes)
   const menus = computed(() => appStore.menus)
@@ -25,6 +27,10 @@ export const useGettersStore = defineStore('getters', () => {
    */
   const roleName = computed(() => userStore.userInfo?.utype || '')
 
+  const drugList = computed(() => drugStore.drugList)
+  const drugTotal = computed(() => drugStore.total)
+  const saleList = computed(() => drugStore.saleList)
+
   return {
     routes,
     menus,
@@ -33,6 +39,9 @@ export const useGettersStore = defineStore('getters', () => {
     userInfo,
     userName,
     userRole,
-    roleName
+    roleName,
+    drugList,
+    drugTotal,
+    saleList
   }
 })

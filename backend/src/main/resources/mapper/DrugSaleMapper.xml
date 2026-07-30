@@ -12,6 +12,10 @@
         SELECT * FROM drug_sale WHERE drug_id = #{drugId}
     </select>
 
+    <select id="selectSaleIdsByDrugId" resultType="java.lang.Long">
+        SELECT sale_id FROM drug_sale WHERE drug_id = #{drugId}
+    </select>
+
     <insert id="insert" parameterType="com.qst.medical.entity.DrugSale">
         INSERT INTO drug_sale (drug_id, sale_id)
         VALUES (#{drugId}, #{saleId})

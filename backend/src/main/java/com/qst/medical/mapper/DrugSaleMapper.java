@@ -10,6 +10,8 @@ public interface DrugSaleMapper {
 
     List<DrugSale> selectByDrugId(Long drugId);
 
+    List<Long> selectSaleIdsByDrugId(Long drugId);
+
     int insert(DrugSale drugSale);
 
     int deleteByDrugId(Long drugId);
