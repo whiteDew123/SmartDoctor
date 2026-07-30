@@ -20,7 +20,6 @@ public class PermissionService {
     public List<PermissionModel> getAllPermission(String roleName) {
         String finalRoleName = roleName.trim();
         List<Permission> allPermission = permissionMapper.getPermission(finalRoleName);
-        List<PermissionModel> finalPermission = new ArrayList<>();
 
         List<PermissionModel> permissionModels = allPermission.stream()
                 .map(perm -> {
@@ -30,26 +29,23 @@ public class PermissionService {
                 })
                 .collect(Collectors.toList());
 
+        List<PermissionModel> finalPermission = new ArrayList<>();
         for (PermissionModel per : permissionModels) {
-            if (per.getPid() == 0) {
-                finalPermission.add(selectChildren(per, permissionModels, finalRoleName));
+            if (per.getPid() == null || per.getPid() == 0) {
+                finalPermission.add(buildTree(per, permissionModels));
             }
         }
         return finalPermission;
     }
 
-    private PermissionModel selectChildren(PermissionModel father, List<PermissionModel> allPermission, String finalRoleName) {
-        List<PermissionModel> list = new ArrayList<>();
-        for (PermissionModel item : allPermission) {
-            if ("1".equals(finalRoleName)) {
-                String title = item.getTitle().replace("管理", "查询");
-                item.setTitle(title);
-            }
-            if (father.getId().equals(item.getPid())) {
-                list.add(selectChildren(item, allPermission, finalRoleName));
+    private PermissionModel buildTree(PermissionModel current, List<PermissionModel> all) {
+        List<PermissionModel> children = new ArrayList<>();
+        for (PermissionModel item : all) {
+            if (current.getId().equals(item.getPid())) {
+                children.add(buildTree(item, all));
             }
         }
-        father.setChildren(list);
-        return father;
+        current.setChildren(children);
+        return current;
     }
 }

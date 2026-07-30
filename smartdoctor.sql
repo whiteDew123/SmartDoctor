@@ -151,6 +151,7 @@ CREATE TABLE `doctor`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id(医生信息表)',
   `account_id` bigint NULL DEFAULT NULL COMMENT '账号id',
   `age` int NULL DEFAULT NULL COMMENT '年龄',
+  `sex` int NULL DEFAULT NULL COMMENT '性别：1男，2女',
   `hospital` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '所属医院',
   `level_id` bigint NULL DEFAULT NULL COMMENT '医师级别id',
   `type_id` bigint NULL DEFAULT NULL COMMENT '诊治类型id',
@@ -352,17 +353,14 @@ CREATE TABLE `permission`  (
 -- Records of permission
 -- ----------------------------
 INSERT INTO `permission` VALUES (1, NULL, 'Home', '/home', 'Home', 1, '首页');
-INSERT INTO `permission` VALUES (2, NULL, 'Policy', '/policy', 'Policy', 1, '医保政策');
-INSERT INTO `permission` VALUES (3, 2, 'PolicyList', '/policy/list', 'PolicyList', 2, '政策列表');
-INSERT INTO `permission` VALUES (4, 2, 'PolicyDetail', '/policy/detail', 'PolicyDetail', 2, '政策详情');
-INSERT INTO `permission` VALUES (5, NULL, 'Drug', '/drug', 'Drug', 1, '药品管理');
-INSERT INTO `permission` VALUES (6, 5, 'DrugList', '/drug/list', 'DrugList', 2, '药品列表');
-INSERT INTO `permission` VALUES (7, 5, 'DrugCompany', '/drug/company', 'DrugCompany', 2, '医药公司');
-INSERT INTO `permission` VALUES (8, NULL, 'Doctor', '/doctor', 'Doctor', 1, '医生管理');
-INSERT INTO `permission` VALUES (9, NULL, 'Patient', '/patient', 'Patient', 1, '患者管理');
-INSERT INTO `permission` VALUES (10, NULL, 'System', '/system', 'System', 1, '系统管理');
-INSERT INTO `permission` VALUES (11, 10, 'Account', '/system/account', 'Account', 2, '账号管理');
-INSERT INTO `permission` VALUES (12, 10, 'Role', '/system/role', 'Role', 2, '角色管理');
+INSERT INTO `permission` VALUES (2, NULL, 'DrugCompany', '/drug/company', 'DrugCompany', 1, '医药公司管理');
+INSERT INTO `permission` VALUES (3, NULL, 'SaleLocation', '/sale/location', 'SaleLocation', 1, '销售地点管理');
+INSERT INTO `permission` VALUES (4, NULL, 'City', '/city', 'City', 1, '城市信息管理');
+INSERT INTO `permission` VALUES (5, NULL, 'DrugList', '/drug/list', 'DrugList', 1, '药品信息管理');
+INSERT INTO `permission` VALUES (6, NULL, 'PolicyList', '/policy/list', 'PolicyList', 1, '医保政策管理');
+INSERT INTO `permission` VALUES (7, NULL, 'CompanyPolicy', '/company/policy', 'CompanyPolicy', 1, '医药公司政策管理');
+INSERT INTO `permission` VALUES (8, NULL, 'Doctor', '/doctor', 'Doctor', 1, '医生信息管理');
+INSERT INTO `permission` VALUES (9, NULL, 'Material', '/material', 'Material', 1, '必备材料管理');
 
 -- ----------------------------
 -- Table structure for role_permission
@@ -387,20 +385,13 @@ INSERT INTO `role_permission` VALUES (6, '1', 6);
 INSERT INTO `role_permission` VALUES (7, '1', 7);
 INSERT INTO `role_permission` VALUES (8, '1', 8);
 INSERT INTO `role_permission` VALUES (9, '1', 9);
-INSERT INTO `role_permission` VALUES (10, '1', 10);
-INSERT INTO `role_permission` VALUES (11, '1', 11);
-INSERT INTO `role_permission` VALUES (12, '1', 12);
-INSERT INTO `role_permission` VALUES (13, '2', 1);
-INSERT INTO `role_permission` VALUES (14, '2', 2);
-INSERT INTO `role_permission` VALUES (15, '2', 3);
-INSERT INTO `role_permission` VALUES (16, '2', 4);
-INSERT INTO `role_permission` VALUES (17, '2', 5);
-INSERT INTO `role_permission` VALUES (18, '2', 6);
-INSERT INTO `role_permission` VALUES (19, '2', 9);
-INSERT INTO `role_permission` VALUES (20, '3', 1);
-INSERT INTO `role_permission` VALUES (21, '3', 2);
-INSERT INTO `role_permission` VALUES (22, '3', 3);
-INSERT INTO `role_permission` VALUES (23, '3', 4);
+INSERT INTO `role_permission` VALUES (10, '2', 1);
+INSERT INTO `role_permission` VALUES (11, '2', 8);
+INSERT INTO `role_permission` VALUES (12, '2', 5);
+INSERT INTO `role_permission` VALUES (13, '2', 6);
+INSERT INTO `role_permission` VALUES (14, '3', 1);
+INSERT INTO `role_permission` VALUES (15, '3', 5);
+INSERT INTO `role_permission` VALUES (16, '3', 6);
 
 -- ----------------------------
 -- Table structure for sale

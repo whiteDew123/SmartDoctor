@@ -62,11 +62,27 @@ const handleLogin = async () => {
   if (!valid) return
 
   try {
-    await userStore.handleLogin(form)
+    const res = await userStore.handleLogin(form)
+    console.log('[Login] 登录响应:', res)
+    const account = res?.data?.account
+    const token = res?.data?.token
+    if (!account || !token) {
+      ElMessage.error('登录响应数据异常，请检查后端接口')
+      console.error('[Login] 响应缺少 account 或 token', res)
+      return
+    }
+    const utype = account.utype
+    // 动态路由提前加载，避免首屏空白
+    if (utype) {
+      const { useAppStore } = await import('@/store/modules/app')
+      const appStore = useAppStore()
+      await appStore.loadPermissionRoutes(String(utype))
+    }
     ElMessage.success('登录成功')
     router.push('/')
   } catch (error) {
     console.error(error)
+    ElMessage.error(error.message || '登录失败')
   }
 }
 </script>

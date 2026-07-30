@@ -7,6 +7,7 @@
         <result column="name" property="name"/>
         <result column="age" property="age"/>
         <result column="sex" property="sex"/>
+        <result column="hospital" property="hospital"/>
         <result column="level_id" property="levelId"/>
         <result column="phone_number" property="phoneNumber"/>
         <result column="type_id" property="typeId"/>
@@ -21,6 +22,8 @@
         a.phonenumber as phone_number,
         a.id as account_id,
         d.age,
+        d.sex,
+        d.hospital,
         d.level_id,
         d.type_id,
         tt.name as treat_type,
@@ -68,5 +71,34 @@
     <select id="selectAllTreatTypes" resultType="com.qst.medical.entity.TreatTypeEntity">
         SELECT id, name FROM treat_type
     </select>
+
+    <select id="selectDoctorById" resultMap="DoctorResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM doctor d
+        <include refid="Base_Join"/>
+        WHERE d.id = #{id}
+    </select>
+
+    <insert id="insertDoctor" parameterType="com.qst.medical.entity.DoctorEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO doctor (account_id, age, sex, hospital, level_id, type_id, createtime)
+        VALUES (#{accountId}, #{age}, #{sex}, #{hospital}, #{levelId}, #{typeId}, NOW())
+    </insert>
+
+    <update id="updateDoctor" parameterType="com.qst.medical.entity.DoctorEntity">
+        UPDATE doctor
+        <set>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="hospital != null">hospital = #{hospital},</if>
+            <if test="levelId != null">level_id = #{levelId},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteDoctor">
+        DELETE FROM doctor WHERE id = #{id}
+    </delete>
 
 </mapper>

@@ -2,7 +2,6 @@ package com.qst.medical.controller;
 
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Account;
-import com.qst.medical.entity.LoginVo;
 import com.qst.medical.entity.MyUserDetails;
 import com.qst.medical.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,7 +26,7 @@ public class LoginController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public Result<LoginVo> login(@RequestBody Map<String, String> params) {
+    public Result<Map<String, Object>> login(@RequestBody Map<String, String> params) {
         String uname = params.get("uname");
         String pwd = params.get("pwd");
 
@@ -38,7 +38,10 @@ public class LoginController {
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
             Account account = userDetails.getAccount();
             String token = JwtUtil.getJwtToken(account.getId(), account.getUname(), account.getUtype());
-            return Result.success(new LoginVo(account, token));
+            Map<String, Object> data = new HashMap<>();
+            data.put("token", token);
+            data.put("account", account);
+            return Result.success(data);
         } catch (BadCredentialsException e) {
             return Result.error("用户名或密码错误");
         } catch (Exception e) {

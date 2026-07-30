@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 医药公司 SQL 映射文件，对应接口 com.qst.medical.mapper.DrugcompanyMapper -->
+<mapper namespace="com.qst.medical.mapper.DrugcompanyMapper">
+
+    <!-- ==================== 结果映射 ==================== -->
+    <resultMap id="BaseResultMap" type="com.qst.medical.entity.Drugcompany">
+        <id column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="company_phone" property="companyPhone"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+    </resultMap>
+
+    <!-- ==================== 查询语句 ==================== -->
+
+    <!-- 条件分页查询：使用 WHERE 1=1 兼容 PageHelper 分页插件 -->
+    <select id="selectByPage" resultMap="BaseResultMap">
+        SELECT company_id, company_name, company_phone, createtime, updatetime
+        FROM drugcompany
+        WHERE 1=1
+        <if test="companyName != null and companyName != ''">
+            AND company_name LIKE CONCAT('%', #{companyName}, '%')
+        </if>
+        <if test="companyPhone != null and companyPhone != ''">
+            AND company_phone LIKE CONCAT('%', #{companyPhone}, '%')
+        </if>
+        ORDER BY createtime DESC
+    </select>
+
+    <!-- 根据 ID 查询单个医药公司 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT company_id, company_name, company_phone, createtime, updatetime
+        FROM drugcompany
+        WHERE company_id = #{companyId}
+    </select>
+
+    <!-- ==================== 新增语句 ==================== -->
+
+    <!-- 添加医药公司：自增 ID 由数据库自动生成 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="companyId">
+        INSERT INTO drugcompany (company_name, company_phone, createtime, updatetime)
+        VALUES (#{companyName}, #{companyPhone}, #{createtime}, #{updatetime})
+    </insert>
+
+    <!-- ==================== 修改语句 ==================== -->
+
+    <!-- 修改医药公司：根据 ID 更新公司名称、公司电话和更新时间 -->
+    <update id="update">
+        UPDATE drugcompany
+        SET company_name = #{companyName},
+            company_phone = #{companyPhone},
+            updatetime = #{updatetime}
+        WHERE company_id = #{companyId}
+    </update>
+
+    <!-- ==================== 删除语句 ==================== -->
+
+    <!-- 根据 ID 删除医药公司 -->
+    <delete id="deleteById">
+        DELETE FROM drugcompany WHERE company_id = #{companyId}
+    </delete>
+
+</mapper>

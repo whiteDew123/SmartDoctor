@@ -21,7 +21,7 @@
           </el-col>
           <el-col :span="6">
             <div class="module-card">
-              <el-icon size="40"><MedicineBox /></el-icon>
+              <el-icon size="40"><Operation /></el-icon>
               <p>药品管理</p>
             </div>
           </el-col>

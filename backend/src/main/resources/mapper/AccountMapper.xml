@@ -21,8 +21,38 @@
         SELECT * FROM account WHERE id = #{id}
     </select>
 
-    <insert id="insert" parameterType="com.qst.medical.entity.Account">
+    <select id="selectByPhonenumber" resultMap="BaseResultMap">
+        SELECT * FROM account
+        WHERE phonenumber = #{phonenumber}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+        LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.qst.medical.entity.Account" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO account (realname, uname, pwd, phonenumber, utype, createtime)
         VALUES (#{realname}, #{uname}, #{pwd}, #{phonenumber}, #{utype}, NOW())
     </insert>
+
+    <update id="updateById" parameterType="com.qst.medical.entity.Account">
+        UPDATE account
+        <set>
+            <if test="realname != null">realname = #{realname},</if>
+            <if test="uname != null">uname = #{uname},</if>
+            <if test="phonenumber != null">phonenumber = #{phonenumber},</if>
+            <if test="utype != null">utype = #{utype},</if>
+            updatetime = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePwd">
+        UPDATE account SET pwd = #{pwd}, updatetime = NOW() WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM account WHERE id = #{id}
+    </delete>
+
 </mapper>

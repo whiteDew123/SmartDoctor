@@ -22,9 +22,10 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.code !== 200) {
-      ElMessage.error(res.msg || '请求失败')
-      return Promise.reject(new Error(res.msg || '请求失败'))
+    // 后端 Result / DrugResult 统一使用 code=20000 表示成功，message 字段承载提示文本
+    if (res.code !== 20000) {
+      ElMessage.error(res.message || '请求失败')
+      return Promise.reject(new Error(res.message || '请求失败'))
     }
     return res
   },
