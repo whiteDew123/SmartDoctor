@@ -4,6 +4,7 @@ import { useAppStore } from './app'
 import { useUserStore } from '@/store/user'
 import { useDrugStore } from './drug'
 import { useCompanyPolicyStore } from './companyPolicy'
+import { useCityStore } from './city'
 
 /**
  * 集中式 getters 入口。
@@ -14,6 +15,7 @@ export const useGettersStore = defineStore('getters', () => {
   const userStore = useUserStore()
   const drugStore = useDrugStore()
   const companyPolicyStore = useCompanyPolicyStore()
+  const cityStore = useCityStore()
 
   const routes = computed(() => appStore.dynamicRoutes)
   const menus = computed(() => appStore.menus)
@@ -37,6 +39,9 @@ export const useGettersStore = defineStore('getters', () => {
   const policyTotal = computed(() => companyPolicyStore.total)
   const companyList = computed(() => companyPolicyStore.companyList)
 
+  const cityList = computed(() => cityStore.cityList)
+  const cityTotal = computed(() => cityStore.total)
+
   return {
     routes,
     menus,
@@ -51,6 +56,8 @@ export const useGettersStore = defineStore('getters', () => {
     saleList,
     policyList,
     policyTotal,
-    companyList
+    companyList,
+    cityList,
+    cityTotal
   }
 })

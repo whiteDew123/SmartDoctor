@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 public class City {
     private Long cityId;
     private Integer cityNumber;
+    private String province;
+    private String city;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createtime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
