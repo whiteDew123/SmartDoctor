@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useAppStore } from './app'
 import { useUserStore } from '@/store/user'
 import { useDrugStore } from './drug'
+import { useCompanyPolicyStore } from './companyPolicy'
 
 /**
  * 集中式 getters 入口。
@@ -12,6 +13,7 @@ export const useGettersStore = defineStore('getters', () => {
   const appStore = useAppStore()
   const userStore = useUserStore()
   const drugStore = useDrugStore()
+  const companyPolicyStore = useCompanyPolicyStore()
 
   const routes = computed(() => appStore.dynamicRoutes)
   const menus = computed(() => appStore.menus)
@@ -31,6 +33,10 @@ export const useGettersStore = defineStore('getters', () => {
   const drugTotal = computed(() => drugStore.total)
   const saleList = computed(() => drugStore.saleList)
 
+  const policyList = computed(() => companyPolicyStore.policyList)
+  const policyTotal = computed(() => companyPolicyStore.total)
+  const companyList = computed(() => companyPolicyStore.companyList)
+
   return {
     routes,
     menus,
@@ -42,6 +48,9 @@ export const useGettersStore = defineStore('getters', () => {
     roleName,
     drugList,
     drugTotal,
-    saleList
+    saleList,
+    policyList,
+    policyTotal,
+    companyList
   }
 })

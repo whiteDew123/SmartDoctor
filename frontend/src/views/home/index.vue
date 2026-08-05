@@ -201,7 +201,7 @@ const modules = [
   { title: '基础信息管理', image: modImg1, path: '/system/account' },
   { title: '药品信息管理', image: modImg2, path: '/drug/list' },
   { title: '医保政策管理', image: modImg3, path: '/policy/list' },
-  { title: '医药公司政策管理', image: modImg4, path: '/drug/company' },
+  { title: '医药公司政策管理', image: modImg4, path: '/company/policy' },
   { title: '医生信息管理', image: modImg5, path: '/doctor' },
   { title: '必备材料管理', image: modImg6, path: '/material' }
 ]
