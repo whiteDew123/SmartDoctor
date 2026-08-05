@@ -110,4 +110,14 @@
         ORDER BY mp.create_time DESC
         LIMIT #{limit}
     </select>
+
+    <!-- 查询所有城市选项（含城市名称），用于医保政策新增/编辑时的城市下拉选择 -->
+    <select id="selectAllCityOptions" resultMap="BaseResultMap">
+        SELECT ct.city_id,
+               ch.name AS city_name,
+               ct.city_number
+        FROM city ct
+        LEFT JOIN china ch ON ct.city_number = ch.id
+        ORDER BY ct.city_id ASC
+    </select>
 </mapper>
