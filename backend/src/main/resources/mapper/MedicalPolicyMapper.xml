@@ -101,4 +101,23 @@
     <delete id="deleteByCityId">
         DELETE FROM medical_policy WHERE city_id = #{cityId}
     </delete>
+
+    <select id="selectLatest" resultMap="BaseResultMap">
+        SELECT mp.id, mp.title, mp.message, mp.city_id, mp.create_time, mp.update_time,
+               (SELECT ch.name FROM city ct2 LEFT JOIN china ch ON ct2.city_number = ch.id WHERE ct2.city_id = mp.city_id) AS city_name,
+               (SELECT ct3.city_number FROM city ct3 WHERE ct3.city_id = mp.city_id) AS city_number
+        FROM medical_policy mp
+        ORDER BY mp.create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询所有城市选项（含城市名称），用于医保政策新增/编辑时的城市下拉选择 -->
+    <select id="selectAllCityOptions" resultMap="BaseResultMap">
+        SELECT ct.city_id,
+               ch.name AS city_name,
+               ct.city_number
+        FROM city ct
+        LEFT JOIN china ch ON ct.city_number = ch.id
+        ORDER BY ct.city_id ASC
+    </select>
 </mapper>

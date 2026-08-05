@@ -16,4 +16,6 @@ public interface DrugMapper {
     int updateById(Drug drug);
 
     int deleteById(Long drugId);
+
+    Long countAll();
 }

@@ -47,8 +47,9 @@
                 OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
                 OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
             </if>
+        AND a.utype = '2'
         </where>
-        ORDER BY d.id DESC
+        ORDER BY d.id ASC
         LIMIT #{offset}, #{param.size}
     </select>
 
@@ -61,6 +62,7 @@
                 OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
                 OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
             </if>
+            AND a.utype = '2'
         </where>
     </select>
 
@@ -100,5 +102,17 @@
     <delete id="deleteDoctor">
         DELETE FROM doctor WHERE id = #{id}
     </delete>
+
+    <select id="countAllDoctors" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor
+    </select>
+
+    <select id="countByLevelId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor WHERE level_id = #{levelId}
+    </select>
+
+    <select id="countByTypeId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor WHERE type_id = #{typeId}
+    </select>
 
 </mapper>

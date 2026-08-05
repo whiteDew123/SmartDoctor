@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartDoctor 慧医 - 品牌标志设计</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #1976D2;
+    --blue-light: #42A5F5;
+    --green: #43A047;
+    --green-light: #66BB6A;
+    --gradient: linear-gradient(135deg, #1976D2 0%, #43A047 100%);
+    --gradient-text: linear-gradient(135deg, #1976D2, #43A047);
+    --dark: #1a1a2e;
+    --gray: #f5f7fa;
+    --gray-dark: #64748b;
+    --shadow: 0 20px 60px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #fff;
+    color: #1a1a2e;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { background: var(--blue-light); border-radius: 3px; }
+
+  /* Navigation */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.9); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0 40px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo-mini {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 18px;
+  }
+  nav .logo-mini span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  nav .nav-links { display: flex; gap: 28px; list-style: none; }
+  nav .nav-links a {
+    text-decoration: none; color: var(--gray-dark); font-size: 14px; font-weight: 500;
+    transition: color 0.3s; position: relative;
+  }
+  nav .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: var(--gradient); transition: width 0.3s; border-radius: 1px;
+  }
+  nav .nav-links a:hover { color: var(--dark); }
+  nav .nav-links a:hover::after { width: 100%; }
+
+  /* Hero Section */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 120px 40px 80px;
+    background: linear-gradient(180deg, #f0f7ff 0%, #fff 40%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(25,118,210,0.03) 0%, transparent 50%);
+    animation: pulse-bg 8s ease-in-out infinite;
+  }
+  @keyframes pulse-bg {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(25,118,210,0.08); padding: 8px 20px; border-radius: 100px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+    margin-bottom: 30px; letter-spacing: 0.5px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 72px); font-weight: 900; text-align: center;
+    line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 1;
+  }
+  .hero h1 .gradient-text {
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 18px; color: var(--gray-dark); text-align: center;
+    max-width: 500px; margin-bottom: 50px; position: relative; z-index: 1;
+  }
+  .hero-logo {
+    position: relative; z-index: 1;
+    max-width: 600px; width: 100%;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    transition: transform 0.5s ease;
+  }
+  .hero-logo:hover { transform: scale(1.02); }
+  .hero-logo img { width: 100%; height: auto; display: block; border-radius: 20px; }
+
+  .scroll-indicator {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--gray-dark); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+  .scroll-indicator .arrow {
+    width: 20px; height: 20px; border-right: 2px solid var(--gray-dark);
+    border-bottom: 2px solid var(--gray-dark); transform: rotate(45deg);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Section Common */
+  section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    background: rgba(25,118,210,0.08); padding: 6px 16px; border-radius: 100px;
+    font-size: 12px; font-weight: 700; color: var(--blue); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; margin-bottom: 12px;
+  }
+  .section-desc {
+    color: var(--gray-dark); font-size: 16px; max-width: 600px; margin-bottom: 50px;
+  }
+
+  /* Design Concept */
+  .concept-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  }
+  .concept-card {
+    background: var(--gray); border-radius: var(--radius); padding: 40px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .concept-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+  .concept-card .icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 16px;
+  }
+  .concept-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .concept-card p { color: var(--gray-dark); font-size: 14px; line-height: 1.7; }
+
+  /* Color Palette */
+  .color-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;
+  }
+  .color-item {
+    border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.3s;
+  }
+  .color-item:hover { transform: translateY(-4px); }
+  .color-swatch { height: 100px; }
+  .color-info { padding: 16px; }
+  .color-info .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .color-info .hex { color: var(--gray-dark); font-size: 12px; font-family: monospace; }
+
+  /* Logo Variants */
+  .variant-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+  }
+  .variant-card {
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: #fff;
+  }
+  .variant-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,0,0,0.1); }
+  .variant-card .preview {
+    padding: 30px; display: flex; align-items: center; justify-content: center;
+    min-height: 220px;
+  }
+  .variant-card .preview img { max-width: 100%; max-height: 200px; border-radius: 8px; }
+  .variant-card .preview.dark { background: #1a1a2e; }
+  .variant-card .preview.light { background: #fff; }
+  .variant-card .info { padding: 20px; border-top: 1px solid #eee; }
+  .variant-card .info h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .variant-card .info p { color: var(--gray-dark); font-size: 13px; }
+
+  /* Typography */
+  .typo-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+  }
+  .typo-card {
+    background: var(--gray); border-radius: var(--radius); padding: 30px;
+  }
+  .typo-card h3 { font-size: 14px; font-weight: 600; color: var(--gray-dark); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .typo-card .sample { line-height: 1.4; }
+  .typo-card .sample.en { font-family: 'Inter', sans-serif; }
+  .typo-card .sample.cn { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+
+  /* Usage Guidelines */
+  .guidelines-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .guideline-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    background: var(--gray); border-radius: var(--radius); padding: 24px;
+  }
+  .guideline-item .badge {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #fff;
+  }
+  .guideline-item .badge.do { background: var(--green); }
+  .guideline-item .badge.dont { background: #ef5350; }
+  .guideline-item h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .guideline-item p { color: var(--gray-dark); font-size: 13px; line-height: 1.6; }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 40px; color: var(--gray-dark);
+    font-size: 13px; border-top: 1px solid #eee;
+    background: var(--gray);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    nav .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    section { padding: 60px 20px; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .typo-grid { grid-template-columns: 1fr; }
+    .guidelines-grid { grid-template-columns: 1fr; }
+    .variant-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-mini">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect x="2" y="2" width="24" height="24" rx="6" fill="url(#nav-grad)"/>
+      <path d="M14 6v16M6 14h16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <defs><linearGradient id="nav-grad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#1976D2"/><stop offset="1" stop-color="#43A047"/></linearGradient></defs>
+    </svg>
+    <span>SmartDoctor</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#concept">设计理念</a></li>
+    <li><a href="#colors">色彩</a></li>
+    <li><a href="#variants">变体</a></li>
+    <li><a href="#typography">字体</a></li>
+    <li><a href="#guidelines">规范</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">&#9679; 品牌标志设计 v1.0</div>
+  <h1><span class="gradient-text">SmartDoctor</span> 慧医</h1>
+  <p>智慧医疗数字管理系统的品牌视觉识别</p>
+  <div class="hero-logo">
+    <img src="logo.jpg" alt="SmartDoctor Logo">
+  </div>
+  <div class="scroll-indicator">
+    <span>向下滚动</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- Design Concept -->
+<section id="concept">
+  <div class="section-label">&#9679; 设计理念</div>
+  <h2 class="section-title">标志背后的故事</h2>
+  <p class="section-desc">将医疗专业性与数字科技深度融合，打造具有识别度的品牌符号。</p>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="icon" style="background: rgba(25,118,210,0.1);">&#x2716;</div>
+      <h3>医疗十字</h3>
+      <p>标志的核心轮廓采用国际通用的医疗十字符号，象征医疗健康行业的专业属性，传递救助、关怀与生命守护的品牌使命。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon" style="background: rgba(67,160,71,0.1);">&#x2661;</div>
+      <h3>心电波形</h3>
+      <p>贯穿十字中央的心电图（ECG）波形线条，代表生命体征监测与健康数据感知，呼应"智慧医疗"中实时、精准、智能的特性。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon" style="background: rgba(25,118,210,0.1);">&#x2699;</div>
+      <h3>电路纹理</h3>
+      <p>十字轮廓内部布满精密电路线条与节点，象征数字化、信息化、智能化的技术底座，体现系统强大的数据处理能力。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon" style="background: rgba(67,160,71,0.1);">&#x25C6;</div>
+      <h3>蓝绿渐变</h3>
+      <p>科技蓝（#1976D2）与健康绿（#43A047）的对角渐变，蓝色代表理性、信任与科技力量，绿色代表生命、健康与希望，形成视觉与语义的双重融合。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Color Palette -->
+<section id="colors">
+  <div class="section-label">&#9679; 品牌色彩</div>
+  <h2 class="section-title">色彩系统</h2>
+  <p class="section-desc">定义品牌色彩体系，确保视觉一致性。</p>
+  <div class="color-grid">
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #1976D2, #1565C0);"></div>
+      <div class="color-info"><div class="name">科技蓝</div><div class="hex">#1976D2</div></div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #42A5F5, #1E88E5);"></div>
+      <div class="color-info"><div class="name">浅蓝</div><div class="hex">#42A5F5</div></div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #43A047, #388E3C);"></div>
+      <div class="color-info"><div class="name">健康绿</div><div class="hex">#43A047</div></div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #66BB6A, #4CAF50);"></div>
+      <div class="color-info"><div class="name">浅绿</div><div class="hex">#66BB6A</div></div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #1a1a2e, #16213e);"></div>
+      <div class="color-info"><div class="name">深色底</div><div class="hex">#1a1a2e</div></div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: linear-gradient(135deg, #f5f7fa, #e8ecf1);"></div>
+      <div class="color-info"><div class="name">浅灰底</div><div class="hex">#f5f7fa</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Logo Variants -->
+<section id="variants">
+  <div class="section-label">&#9679; 标志变体</div>
+  <h2 class="section-title">多场景适配</h2>
+  <p class="section-desc">针对不同应用场景设计的标志变体，保持品牌一致性。</p>
+  <div class="variant-grid">
+    <div class="variant-card">
+      <div class="preview light"><img src="logo.jpg" alt="主标志"></div>
+      <div class="info"><h4>主标志 · 竖版</h4><p>标准上下布局，用于官网、宣传物料、品牌展示等主要场景。</p></div>
+    </div>
+    <div class="variant-card">
+      <div class="preview light"><img src="logo-horizontal.jpg" alt="横版标志"></div>
+      <div class="info"><h4>横版标志</h4><p>左右布局，适用于导航栏、页眉、PPT模板等横向空间受限的场景。</p></div>
+    </div>
+    <div class="variant-card">
+      <div class="preview dark"><img src="logo-white.jpg" alt="反白标志"></div>
+      <div class="info"><h4>反白标志</h4><p>纯白色版本，适用于深色背景、暗色模式界面、深色印刷品等。</p></div>
+    </div>
+    <div class="variant-card">
+      <div class="preview light"><img src="logo-icon.jpg" alt="图标标志"></div>
+      <div class="info"><h4>图标独立版</h4><p>去除文字仅保留图形，适用于App图标、浏览器Favicon、社交媒体头像。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Typography -->
+<section id="typography">
+  <div class="section-label">&#9679; 字体规范</div>
+  <h2 class="section-title">字体系统</h2>
+  <p class="section-desc">品牌字体选择与应用规范。</p>
+  <div class="typo-grid">
+    <div class="typo-card">
+      <h3>英文品牌字 · Inter</h3>
+      <div class="sample en">
+        <div style="font-size:36px; font-weight:800;">SmartDoctor</div>
+        <div style="font-size:24px; font-weight:600;">SmartDoctor</div>
+        <div style="font-size:16px; font-weight:400;">SmartDoctor Healthcare System</div>
+      </div>
+    </div>
+    <div class="typo-card">
+      <h3>中文品牌字 · PingFang SC</h3>
+      <div class="sample cn">
+        <div style="font-size:36px; font-weight:700;">慧医数字医疗</div>
+        <div style="font-size:24px; font-weight:500;">慧医数字医疗应用系统</div>
+        <div style="font-size:16px; font-weight:400;">智慧医疗 · 数字健康管理平台</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Usage Guidelines -->
+<section id="guidelines">
+  <div class="section-label">&#9679; 使用规范</div>
+  <h2 class="section-title">标志使用指南</h2>
+  <p class="section-desc">确保品牌标志在不同场景下的一致性和正确使用。</p>
+  <div class="guidelines-grid">
+    <div class="guideline-item">
+      <div class="badge do">&#x2713;</div>
+      <div>
+        <h4>保持安全空间</h4>
+        <p>标志四周应保留至少等于标志高度 1/4 的空白区域，避免与其他元素重叠。</p>
+      </div>
+    </div>
+    <div class="guideline-item">
+      <div class="badge do">&#x2713;</div>
+      <div>
+        <h4>使用官方渐变色</h4>
+        <p>优先使用蓝绿渐变色彩版本，确保品牌识别度。背景色应为白色或浅色。</p>
+      </div>
+    </div>
+    <div class="guideline-item">
+      <div class="badge dont">&#x2717;</div>
+      <div>
+        <h4>禁止变形拉伸</h4>
+        <p>保持标志原有比例，禁止水平或垂直拉伸变形，或在圆形/异形区域强行裁剪。</p>
+      </div>
+    </div>
+    <div class="guideline-item">
+      <div class="badge dont">&#x2717;</div>
+      <div>
+        <h4>禁止更改颜色</h4>
+        <p>禁止使用非官方指定色彩，禁止添加阴影、发光、描边等额外效果。</p>
+      </div>
+    </div>
+    <div class="guideline-item">
+      <div class="badge do">&#x2713;</div>
+      <div>
+        <h4>深色背景用反白版</h4>
+        <p>在深色或复杂背景上使用反白版本标志，确保可视性和对比度。</p>
+      </div>
+    </div>
+    <div class="guideline-item">
+      <div class="badge dont">&#x2717;</div>
+      <div>
+        <h4>禁止旋转或倾斜</h4>
+        <p>标志应始终保持正立方向，禁止旋转、倾斜、翻转或重新排列元素。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>SmartDoctor 慧医 &mdash; 品牌视觉识别系统 &copy; 2026</p>
+</footer>
+
+</body>
+</html>

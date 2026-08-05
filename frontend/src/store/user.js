@@ -38,7 +38,11 @@ export const useUserStore = defineStore('user', () => {
   const handleLogin = async (loginInfo) => {
     const username = loginInfo.uname.trim()
     return new Promise((resolve, reject) => {
-      login({ uname: username, pwd: loginInfo.pwd }).then(res => {
+      login({
+        uname: username,
+        pwd: loginInfo.pwd,
+        role: loginInfo.role
+      }).then(res => {
         setToken(res.data.token)
         setUserInfo(res.data.account)
         resolve(res)

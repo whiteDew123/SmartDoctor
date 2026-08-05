@@ -61,4 +61,8 @@
         DELETE FROM drugcompany WHERE company_id = #{companyId}
     </delete>
 
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM drugcompany
+    </select>
+
 </mapper>

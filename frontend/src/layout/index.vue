@@ -86,13 +86,7 @@ const fallbackMenus = [
   { id: 9, path: '/material', title: '必备材料管理' }
 ]
 
-const menus = computed(() => {
-  const dynamic = appStore.menus
-  if (dynamic && dynamic.length > 0) {
-    return dynamic
-  }
-  return fallbackMenus
-})
+const menus = computed(() => fallbackMenus)
 
 const iconMap = {
   '/home': 'HomeFilled',

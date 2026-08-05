@@ -89,4 +89,14 @@ public class MedicalPolicyService {
     public int deleteById(Long id) {
         return medicalPolicyMapper.deleteById(id);
     }
+
+    /**
+     * 查询所有城市选项（含城市名称）
+     * 用于医保政策新增/编辑时的城市下拉选择
+     *
+     * @return 城市选项列表，仅填充 cityId、cityName、cityNumber
+     */
+    public List<MedicalPolicyModel> getAllCityOptions() {
+        return medicalPolicyMapper.selectAllCityOptions();
+    }
 }

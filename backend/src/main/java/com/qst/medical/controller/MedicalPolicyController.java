@@ -9,6 +9,8 @@ import com.qst.medical.service.MedicalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 医保政策 REST 接口控制器
  * 提供医保政策的分页查询、详情查询、添加、修改和删除 API
@@ -136,5 +138,18 @@ public class MedicalPolicyController {
     @DeleteMapping("/{id}")
     public Result<Integer> deleteById(@PathVariable Long id) {
         return Result.success(medicalPolicyService.deleteById(id));
+    }
+
+    /**
+     * 查询所有城市选项（含城市名称）
+     * 用于医保政策新增/编辑时的城市下拉选择
+     *
+     * 请求示例：GET /api/medical-policy/cities
+     *
+     * @return 统一响应格式 Result 包裹城市选项列表（cityId、cityName、cityNumber）
+     */
+    @GetMapping("/cities")
+    public Result<List<MedicalPolicyModel>> cityOptions() {
+        return Result.success(medicalPolicyService.getAllCityOptions());
     }
 }
