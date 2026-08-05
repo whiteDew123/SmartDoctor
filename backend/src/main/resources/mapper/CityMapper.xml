@@ -5,6 +5,8 @@
     <resultMap id="BaseResultMap" type="com.qst.medical.entity.City">
         <id column="city_id" property="cityId"/>
         <result column="city_number" property="cityNumber"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
         <result column="createtime" property="createtime"/>
         <result column="updatetime" property="updatetime"/>
     </resultMap>
@@ -26,8 +28,8 @@
 
     <!-- 添加城市信息 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="cityId">
-        INSERT INTO city (city_number, createtime, updatetime)
-        VALUES (#{cityNumber}, NOW(), NOW())
+        INSERT INTO city (city_number, province, city, createtime, updatetime)
+        VALUES (#{cityNumber}, #{province}, #{city}, NOW(), NOW())
     </insert>
 
     <!-- 删除城市信息 -->
