@@ -34,4 +34,6 @@ public interface CompanyPolicyMapper {
      * 删除医药公司政策
      */
     int deleteById(Long id);
+
+    List<CompanyPolicy> selectLatest(@Param("limit") int limit);
 }

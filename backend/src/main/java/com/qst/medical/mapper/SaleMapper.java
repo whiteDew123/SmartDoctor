@@ -54,4 +54,6 @@ public interface SaleMapper {
      * @return 受影响的行数（1 表示成功，0 表示记录不存在）
      */
     int deleteById(Long saleId);
+
+    Long countAll();
 }

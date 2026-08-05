@@ -101,4 +101,16 @@
         DELETE FROM doctor WHERE id = #{id}
     </delete>
 
+    <select id="countAllDoctors" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor
+    </select>
+
+    <select id="countByLevelId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor WHERE level_id = #{levelId}
+    </select>
+
+    <select id="countByTypeId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM doctor WHERE type_id = #{typeId}
+    </select>
+
 </mapper>
