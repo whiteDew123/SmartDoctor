@@ -66,4 +66,6 @@ public interface MedicalPolicyMapper {
      * @return 受影响的行数
      */
     int deleteByCityId(@Param("cityId") Long cityId);
+
+    List<MedicalPolicyModel> selectLatest(@Param("limit") int limit);
 }

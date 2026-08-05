@@ -59,4 +59,10 @@
         DELETE FROM company_policy WHERE id = #{id}
     </delete>
 
+    <select id="selectLatest" resultMap="BaseResultMap">
+        SELECT * FROM company_policy
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>

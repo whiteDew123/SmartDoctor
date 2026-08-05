@@ -31,4 +31,10 @@ public interface DoctorMapper {
     int updateDoctor(DoctorEntity doctor);
 
     int deleteDoctor(@Param("id") Long id);
+
+    Long countAllDoctors();
+
+    Long countByLevelId(@Param("levelId") Long levelId);
+
+    Long countByTypeId(@Param("typeId") Long typeId);
 }
