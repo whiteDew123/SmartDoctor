@@ -68,4 +68,13 @@ public interface MedicalPolicyMapper {
     int deleteByCityId(@Param("cityId") Long cityId);
 
     List<MedicalPolicyModel> selectLatest(@Param("limit") int limit);
+
+    /**
+     * 查询所有城市选项（含城市名称）
+     * 用于医保政策新增/编辑时的城市下拉选择
+     * 联表 china 表获取城市名称
+     *
+     * @return 城市选项列表，仅填充 cityId、cityName、cityNumber
+     */
+    List<MedicalPolicyModel> selectAllCityOptions();
 }
