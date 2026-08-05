@@ -47,8 +47,9 @@
                 OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
                 OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
             </if>
+        AND a.utype = '2'
         </where>
-        ORDER BY d.id DESC
+        ORDER BY d.id ASC
         LIMIT #{offset}, #{param.size}
     </select>
 
@@ -61,6 +62,7 @@
                 OR dl.name LIKE CONCAT('%', #{param.keyword}, '%')
                 OR tt.name LIKE CONCAT('%', #{param.keyword}, '%'))
             </if>
+            AND a.utype = '2'
         </where>
     </select>
 

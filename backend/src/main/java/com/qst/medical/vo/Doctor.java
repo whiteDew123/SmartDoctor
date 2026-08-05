@@ -8,6 +8,7 @@ public class Doctor {
     private String name;
     private Integer age;
     private Integer sex;
+    private String hospital;
     private Long levelId;
     private String phoneNumber;
     private Long typeId;
