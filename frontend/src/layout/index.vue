@@ -54,6 +54,12 @@
         </router-view>
       </el-main>
     </el-container>
+    
+    <!-- AI助手 -->
+    <AIAssistant v-model="showAIAssistant" />
+    
+    <!-- AI助手悬浮按钮 -->
+    <AIFloatButton @click="showAIAssistant = true" />
   </el-container>
 </template>
 
@@ -64,6 +70,8 @@ import { ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/store/user'
 import { useAppStore } from '@/store/modules/app'
 import homeLogo from '@/assets/images/HomeLogo.png'
+import AIAssistant from '@/components/AIAssistant.vue'
+import AIFloatButton from '@/components/AIFloatButton.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -71,6 +79,7 @@ const userStore = useUserStore()
 const appStore = useAppStore()
 
 const asideWidth = ref(240)
+const showAIAssistant = ref(false)
 const activeMenu = computed(() => route.path)
 const userName = computed(() => userStore.userInfo?.realname || '未登录')
 
