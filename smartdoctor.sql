@@ -361,6 +361,7 @@ INSERT INTO `permission` VALUES (6, NULL, 'PolicyList', '/policy/list', 'PolicyL
 INSERT INTO `permission` VALUES (7, NULL, 'CompanyPolicy', '/company/policy', 'CompanyPolicy', 1, '医药公司政策管理');
 INSERT INTO `permission` VALUES (8, NULL, 'Doctor', '/doctor', 'Doctor', 1, '医生信息管理');
 INSERT INTO `permission` VALUES (9, NULL, 'Material', '/material', 'Material', 1, '必备材料管理');
+INSERT INTO `permission` VALUES (10, NULL, 'SecurityLog', '/log', 'SecurityLog', 1, '安全日志管理');
 
 -- ----------------------------
 -- Table structure for role_permission
@@ -392,6 +393,7 @@ INSERT INTO `role_permission` VALUES (13, '2', 6);
 INSERT INTO `role_permission` VALUES (14, '3', 1);
 INSERT INTO `role_permission` VALUES (15, '3', 5);
 INSERT INTO `role_permission` VALUES (16, '3', 6);
+INSERT INTO `role_permission` VALUES (17, '1', 10);
 
 -- ----------------------------
 -- Table structure for sale
@@ -464,5 +466,27 @@ INSERT INTO `treat_type` VALUES (3, '住院');
 INSERT INTO `treat_type` VALUES (4, '日间手术');
 INSERT INTO `treat_type` VALUES (5, '家庭医生签约服务');
 INSERT INTO `treat_type` VALUES (6, '互联网诊疗');
+
+-- ----------------------------
+-- Table structure for security_log
+-- ----------------------------
+DROP TABLE IF EXISTS `security_log`;
+CREATE TABLE `security_log`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作人用户名',
+  `user_role` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作人角色（1管理员，2医生，3患者）',
+  `operation` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作类型',
+  `detail` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '操作详情',
+  `ip` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'IP地址',
+  `request_uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '请求URI',
+  `http_method` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'HTTP方法',
+  `status` int NULL DEFAULT NULL COMMENT '操作状态（1成功，0失败）',
+  `result` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作结果描述',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE,
+  INDEX `idx_username`(`username`) USING BTREE,
+  INDEX `idx_operation`(`operation`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '安全日志表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

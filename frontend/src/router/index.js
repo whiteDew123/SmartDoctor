@@ -7,7 +7,7 @@ const STATIC_NAMES = [
   'Login', 'Layout', 'Home',
   'DrugCompany', 'SaleLocation', 'City', 'DrugList',
   'PolicyList', 'CompanyPolicy', 'Doctor', 'Material',
-  'NotFound'
+  'SecurityLog', 'NotFound'
 ]
 
 /**
@@ -89,6 +89,12 @@ const constantRoutes = [
         name: 'Material',
         component: () => import('@/views/material/index.vue'),
         meta: { title: '必备材料管理', roles: ['1', '2'] }
+      },
+      {
+        path: 'log',
+        name: 'SecurityLog',
+        component: () => import('@/views/log/index.vue'),
+        meta: { title: '安全日志管理', roles: ['1'] }
       }
     ]
   },

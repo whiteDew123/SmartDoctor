@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.SecurityLoggable;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Account;
 import com.qst.medical.service.AccountService;
@@ -17,6 +18,7 @@ public class AccountController {
     /**
      * 登录页注册：支持医生(utype=2)与患者(utype=3)。
      */
+    @SecurityLoggable(operation = "用户注册")
     @PostMapping("/register")
     public Result<Void> register(@RequestBody RegisterParam param) {
         return accountService.registerByParam(param);

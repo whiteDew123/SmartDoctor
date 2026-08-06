@@ -3,6 +3,7 @@ package com.qst.medical.controller;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Account;
 import com.qst.medical.entity.MyUserDetails;
+import com.qst.medical.service.LoginSecurityLogService;
 import com.qst.medical.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,9 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private LoginSecurityLogService loginSecurityLogService;
+
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@RequestBody Map<String, String> params) {
         String uname = params.get("uname");
@@ -45,6 +49,8 @@ public class LoginController {
                     && !role.trim().equals(account.getUtype())) {
                 String roleText = "1".equals(account.getUtype()) ? "管理员"
                         : "2".equals(account.getUtype()) ? "医生" : "患者";
+                loginSecurityLogService.record(uname, account.getUtype(), "登录",
+                        "角色不匹配，该账号是" + roleText, 0, "角色不匹配");
                 return Result.error("该账号是" + roleText + "，请选择正确的角色登录");
             }
 
@@ -52,11 +58,17 @@ public class LoginController {
             Map<String, Object> data = new HashMap<>();
             data.put("token", token);
             data.put("account", account);
+            loginSecurityLogService.record(account.getUname(), account.getUtype(), "登录",
+                    "用户登录成功", 1, "登录成功");
             return Result.success(data);
         } catch (BadCredentialsException e) {
+            loginSecurityLogService.record(uname, role, "登录",
+                    "用户名或密码错误", 0, "用户名或密码错误");
             return Result.error("用户名或密码错误");
         } catch (Exception e) {
             e.printStackTrace();
+            loginSecurityLogService.record(uname, role, "登录",
+                    "登录失败：" + e.getMessage(), 0, "登录失败");
             return Result.error("登录失败：" + e.getMessage());
         }
     }
