@@ -670,3 +670,74 @@ onUnmounted(() => {
   }
 }
 </style>
+
+<style lang="scss">
+/* ===== 深色模式 ===== */
+html.dark .home-page {
+  background: #141414;
+}
+
+html.dark .home-banner {
+  background: #1d1d1d;
+}
+
+html.dark .home-banner .banner-slide .banner-overlay {
+  background: linear-gradient(90deg, rgba(29,29,29,0.9) 0%, rgba(29,29,29,0.5) 40%, rgba(29,29,29,0.2) 100%);
+}
+
+html.dark .home-banner .banner-slide .banner-text .banner-title {
+  color: #fff;
+}
+
+html.dark .stat-card {
+  background: #1d1d1d;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
+  .stat-info .stat-value {
+    color: #fff;
+  }
+
+  .stat-info .stat-label {
+    color: #999;
+  }
+}
+
+html.dark .chart-card {
+  background: #1d1d1d;
+  border-color: #333;
+
+  .el-card__header {
+    border-bottom-color: #333;
+  }
+
+  .chart-title {
+    color: #fff;
+  }
+}
+
+html.dark .policy-item {
+  border-bottom-color: #333;
+
+  &:hover {
+    background: #2a2a2a;
+  }
+
+  .policy-text {
+    color: #fff;
+  }
+
+  .policy-date {
+    color: #999;
+  }
+}
+
+html.dark .mod-card {
+  background: #1d1d1d;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+
+  .mod-title {
+    color: #fff;
+    border-top-color: #333;
+  }
+}
+</style>

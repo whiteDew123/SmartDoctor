@@ -327,10 +327,18 @@ const initMap = () => {
     ElMessage.warning('高德地图加载失败，请刷新页面重试')
     return
   }
+  const isDark = document.documentElement.classList.contains('dark')
   map = new window.AMap.Map('amapContainer', {
     zoom: 12,
-    center: [116.397428, 39.90923]
+    center: [116.397428, 39.90923],
+    mapStyle: isDark ? 'amap://styles/grey' : 'amap://styles/light'
   })
+}
+
+const syncMapTheme = () => {
+  if (!map) return
+  const isDark = document.documentElement.classList.contains('dark')
+  map.setMapStyle(isDark ? 'amap://styles/grey' : 'amap://styles/light')
 }
 
 const loadMapMarkers = async () => {
@@ -395,6 +403,10 @@ const switchToMap = async () => {
 
 onMounted(() => {
   loadData()
+  const observer = new MutationObserver(() => {
+    syncMapTheme()
+  })
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 })
 </script>
 
@@ -487,5 +499,34 @@ onMounted(() => {
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+/* ===== 深色模式 ===== */
+html.dark .main-card .map-stats {
+  background: #1d1d1d !important;
+}
+
+html.dark .main-card .map-stats .stats-value {
+  color: #52c4a2 !important;
+}
+
+html.dark .main-card .map-stats .stats-label {
+  color: #999 !important;
+}
+
+html.dark .main-card .map-legend {
+  background: #1d1d1d !important;
+  color: #ccc !important;
+}
+
+html.dark .amap-info-content {
+  background: #1d1d1d !important;
+  color: #e0e0e0 !important;
+}
+
+html.dark .amap-info-sharp {
+  background: #1d1d1d !important;
 }
 </style>
