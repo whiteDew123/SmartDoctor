@@ -10,7 +10,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">城市信息列表</span>
-          <el-button type="primary" :icon="Plus" @click="handleAdd">
+          <el-button v-if="isAdmin" type="primary" :icon="Plus" @click="handleAdd">
             添加城市
           </el-button>
         </div>
@@ -44,7 +44,7 @@
         <el-table-column prop="city" label="城市" width="150" />
         <el-table-column prop="createtime" label="创建时间" width="180" />
         <el-table-column prop="updatetime" label="更新时间" width="180" />
-        <el-table-column label="操作" width="150" fixed="right" align="center">
+        <el-table-column v-if="isAdmin" label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="danger" :icon="Delete" @click="handleDelete(row)">
               删除
@@ -122,8 +122,12 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Delete } from '@element-plus/icons-vue'
 import { useCityStore } from '@/store/modules/city'
+import { useUserStore } from '@/store/user'
 
 const cityStore = useCityStore()
+const userStore = useUserStore()
+
+const isAdmin = computed(() => userStore.userInfo?.utype == 1)
 
 const searchQuery = ref('')
 const pageNum = ref(1)
