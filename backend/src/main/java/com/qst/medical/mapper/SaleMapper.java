@@ -56,4 +56,6 @@ public interface SaleMapper {
     int deleteById(Long saleId);
 
     Long countAll();
+
+    List<Sale> selectAll();
 }

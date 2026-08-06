@@ -183,7 +183,7 @@ const userStore = useUserStore()
 
 const isAdmin = computed(() => {
   const utype = userStore.userInfo?.utype
-  return utype === 1
+  return utype == 1
 })
 
 const searchTitle = ref('')

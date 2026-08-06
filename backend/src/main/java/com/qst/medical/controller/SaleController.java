@@ -21,6 +21,18 @@ public class SaleController {
     private SaleService saleService;
 
     /**
+     * 查询全部销售地点（用于地图展示）
+     *
+     * 请求示例：GET /api/sale/all
+     *
+     * @return 所有销售地点列表
+     */
+    @GetMapping("/all")
+    public Result<java.util.List<Sale>> getAll() {
+        return Result.success(saleService.getAll());
+    }
+
+    /**
      * 分页查询销售地点列表
      * 支持按药店名称和联系电话模糊搜索
      *

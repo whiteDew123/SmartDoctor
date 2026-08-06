@@ -169,7 +169,6 @@ import banner2 from '@/assets/images/hUlLAP.png'
 import banner3 from '@/assets/images/hUl7nA.jpg'
 import banner4 from '@/assets/images/hUlb7t.jpg'
 import banner5 from '@/assets/images/hUlH0I.png'
-import modImg1 from '@/assets/images/hU0yG9.jpg'
 import modImg2 from '@/assets/images/hU0KDf.jpg'
 import modImg3 from '@/assets/images/hUBref.jpg'
 import modImg4 from '@/assets/images/hUDHDP.jpg'
@@ -198,7 +197,6 @@ const banners = [
 ]
 
 const modules = [
-  { title: '基础信息管理', image: modImg1, path: '/system/account' },
   { title: '药品信息管理', image: modImg2, path: '/drug/list' },
   { title: '医保政策管理', image: modImg3, path: '/policy/list' },
   { title: '医药公司政策管理', image: modImg4, path: '/company/policy' },

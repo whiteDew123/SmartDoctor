@@ -1,6 +1,5 @@
 <template>
   <div class="sale-management">
-    <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>销售地点管理</el-breadcrumb-item>
@@ -10,49 +9,95 @@
       <template #header>
         <div class="card-header">
           <span class="title">销售地点列表</span>
-          <el-button type="primary" :icon="Plus" circle @click="handleAdd" />
+          <div class="header-actions">
+            <el-button-group class="view-toggle">
+              <el-button :type="viewMode === 'table' ? 'primary' : ''" @click="viewMode = 'table'">
+                报表视图
+              </el-button>
+              <el-button :type="viewMode === 'map' ? 'primary' : ''" @click="switchToMap">
+                地图视图
+              </el-button>
+            </el-button-group>
+            <el-button v-if="isAdmin" type="primary" :icon="Plus" circle @click="handleAdd" style="margin-left: 12px" />
+          </div>
         </div>
       </template>
 
-      <!-- 搜索框 -->
-      <el-input
-        v-model="searchQuery"
-        placeholder="请输入要查询的药店名称"
-        class="search-input"
-        clearable
-        @clear="handleSearch"
-        @keyup.enter="handleSearch"
-      >
-        <template #prefix>
-          <el-icon><Search /></el-icon>
-        </template>
-      </el-input>
-
-      <!-- 表格 -->
-      <el-table :data="saleList" v-loading="loading" style="width: 100%">
-        <el-table-column prop="saleId" label="编号" sortable />
-        <el-table-column prop="saleName" label="药店名称" show-overflow-tooltip />
-        <el-table-column prop="salePhone" label="联系电话" />
-        <el-table-column prop="createtime" label="创建时间" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
-          <template #default="{ row }">
-            <el-button link type="danger" :icon="Delete" @click="handleDelete(row)">删除</el-button>
-            <el-button link type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+      <!-- 报表视图 -->
+      <template v-if="viewMode === 'table'">
+        <el-input
+          v-model="searchQuery"
+          placeholder="请输入要查询的药店名称"
+          class="search-input"
+          clearable
+          @clear="handleSearch"
+          @keyup.enter="handleSearch"
+        >
+          <template #prefix>
+            <el-icon><Search /></el-icon>
           </template>
-        </el-table-column>
-      </el-table>
+        </el-input>
 
-      <!-- 分页 -->
-      <el-pagination
-        v-model:current-page="pageNum"
-        v-model:page-size="pageSize"
-        :page-sizes="[5, 10, 20, 50]"
-        :total="total"
-        layout="total, prev, pager, next, jumper"
-        class="pagination"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+        <el-table :data="saleList" v-loading="loading" style="width: 100%">
+          <el-table-column prop="saleId" label="编号" sortable />
+          <el-table-column prop="saleName" label="药店名称" show-overflow-tooltip />
+          <el-table-column prop="salePhone" label="联系电话" />
+          <el-table-column prop="address" label="详细地址" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="createtime" label="创建时间" />
+          <el-table-column v-if="isAdmin" label="操作" width="160" fixed="right" align="center">
+            <template #default="{ row }">
+              <el-button link type="danger" :icon="Delete" @click="handleDelete(row)">删除</el-button>
+              <el-button link type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <el-pagination
+          v-model:current-page="pageNum"
+          v-model:page-size="pageSize"
+          :page-sizes="[5, 10, 20, 50]"
+          :total="total"
+          layout="total, prev, pager, next, jumper"
+          class="pagination"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </template>
+
+      <!-- 地图视图 -->
+      <template v-if="viewMode === 'map'">
+        <div v-loading="mapLoading" class="map-container">
+          <div id="amapContainer" class="amap-wrapper"></div>
+        </div>
+
+        <!-- 地图统计面板 -->
+        <div class="map-stats">
+          <div class="stats-item">
+            <div class="stats-value">{{ totalSales }}</div>
+            <div class="stats-label">药店总数</div>
+          </div>
+          <div class="stats-item">
+            <div class="stats-value">{{ coveredCities }}</div>
+            <div class="stats-label">覆盖城市</div>
+          </div>
+          <div class="stats-item">
+            <div class="stats-value">{{ withCoords }}</div>
+            <div class="stats-label">已标注位置</div>
+          </div>
+          <div class="stats-item">
+            <div class="stats-value">{{ withoutCoords }}</div>
+            <div class="stats-label">待标注位置</div>
+          </div>
+        </div>
+
+        <!-- 地图图例 -->
+        <div class="map-legend">
+          <span class="legend-title">图例：</span>
+          <span class="legend-item">
+            <span class="legend-marker blue"></span> 药店位置（点击查看详情）
+          </span>
+        </div>
+      </template>
     </el-card>
 
     <!-- 添加弹窗 -->
@@ -69,6 +114,15 @@
         </el-form-item>
         <el-form-item label="联系电话" prop="salePhone">
           <el-input v-model="addForm.salePhone" placeholder="请输入联系电话" />
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address">
+          <el-input v-model="addForm.address" placeholder="请输入详细地址" />
+        </el-form-item>
+        <el-form-item label="经度" prop="longitude">
+          <el-input v-model="addForm.longitude" placeholder="请输入经度" />
+        </el-form-item>
+        <el-form-item label="纬度" prop="latitude">
+          <el-input v-model="addForm.latitude" placeholder="请输入纬度" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -92,6 +146,15 @@
         <el-form-item label="联系电话" prop="salePhone">
           <el-input v-model="editForm.salePhone" placeholder="请输入联系电话" />
         </el-form-item>
+        <el-form-item label="详细地址" prop="address">
+          <el-input v-model="editForm.address" placeholder="请输入详细地址" />
+        </el-form-item>
+        <el-form-item label="经度" prop="longitude">
+          <el-input v-model="editForm.longitude" placeholder="请输入经度" />
+        </el-form-item>
+        <el-form-item label="纬度" prop="latitude">
+          <el-input v-model="editForm.latitude" placeholder="请输入纬度" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="editDialogVisible = false">取消</el-button>
@@ -102,17 +165,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Edit, Delete } from '@element-plus/icons-vue'
-import { getSaleList, addSale, updateSale, deleteSale } from '@/api/sale'
+import { getSaleList, getAllSale, addSale, updateSale, deleteSale } from '@/api/sale'
+import { useUserStore } from '@/store/user'
 
+const isAdmin = computed(() => useUserStore().userInfo?.utype == 1)
+
+const viewMode = ref('table')
 const searchQuery = ref('')
 const pageNum = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const loading = ref(false)
+const mapLoading = ref(false)
 const saleList = ref([])
+const allSaleData = ref([])
+
+const totalSales = computed(() => allSaleData.value.length)
+const coveredCities = computed(() => {
+  const cities = new Set()
+  allSaleData.value.forEach((item) => {
+    if (item.address) {
+      const match = item.address.match(/(北京|上海|广州|深圳|南京|杭州|成都|重庆|武汉|西安|长沙|天津|苏州|郑州|济南|青岛|大连|沈阳|哈尔滨|福州|厦门|南昌|合肥|昆明|贵阳|南宁|海口|兰州|银川|乌鲁木齐|拉萨)/)
+      if (match) cities.add(match[1])
+    }
+  })
+  return cities.size
+})
+const withCoords = computed(() => allSaleData.value.filter((item) => item.longitude != null && item.latitude != null).length)
+const withoutCoords = computed(() => totalSales.value - withCoords.value)
 
 const addDialogVisible = ref(false)
 const editDialogVisible = ref(false)
@@ -121,19 +204,28 @@ const editFormRef = ref()
 
 const addForm = ref({
   saleName: '',
-  salePhone: ''
+  salePhone: '',
+  address: '',
+  longitude: '',
+  latitude: ''
 })
 
 const editForm = ref({
   saleId: null,
   saleName: '',
-  salePhone: ''
+  salePhone: '',
+  address: '',
+  longitude: '',
+  latitude: ''
 })
 
 const rules = {
   saleName: [{ required: true, message: '请输入药店名称', trigger: 'blur' }],
   salePhone: [{ required: true, message: '请输入联系电话', trigger: 'blur' }]
 }
+
+let map = null
+let markers = []
 
 const loadData = async () => {
   loading.value = true
@@ -170,7 +262,7 @@ const handleSearch = () => {
 }
 
 const handleAdd = () => {
-  addForm.value = { saleName: '', salePhone: '' }
+  addForm.value = { saleName: '', salePhone: '', address: '', longitude: '', latitude: '' }
   addDialogVisible.value = true
 }
 
@@ -186,7 +278,10 @@ const handleEdit = (row) => {
   editForm.value = {
     saleId: row.saleId,
     saleName: row.saleName,
-    salePhone: row.salePhone
+    salePhone: row.salePhone,
+    address: row.address || '',
+    longitude: row.longitude != null ? String(row.longitude) : '',
+    latitude: row.latitude != null ? String(row.latitude) : ''
   }
   editDialogVisible.value = true
 }
@@ -195,7 +290,10 @@ const submitEdit = async () => {
   await editFormRef.value.validate()
   const res = await updateSale(editForm.value.saleId, {
     saleName: editForm.value.saleName,
-    salePhone: editForm.value.salePhone
+    salePhone: editForm.value.salePhone,
+    address: editForm.value.address,
+    longitude: editForm.value.longitude ? parseFloat(editForm.value.longitude) : null,
+    latitude: editForm.value.latitude ? parseFloat(editForm.value.latitude) : null
   })
   ElMessage.success(res.message || '修改成功')
   editDialogVisible.value = false
@@ -215,6 +313,84 @@ const handleDelete = async (row) => {
   const res = await deleteSale(row.saleId)
   ElMessage.success(res.message || '删除成功')
   await loadData()
+}
+
+const clearMarkers = () => {
+  if (markers.length && map) {
+    markers.forEach((m) => map.remove(m))
+    markers = []
+  }
+}
+
+const initMap = () => {
+  if (!window.AMap) {
+    ElMessage.warning('高德地图加载失败，请刷新页面重试')
+    return
+  }
+  map = new window.AMap.Map('amapContainer', {
+    zoom: 12,
+    center: [116.397428, 39.90923]
+  })
+}
+
+const loadMapMarkers = async () => {
+  mapLoading.value = true
+  try {
+    const res = await getAllSale()
+    const allList = res.data || []
+    allSaleData.value = allList
+    clearMarkers()
+
+    if (allList.length === 0) {
+      mapLoading.value = false
+      return
+    }
+
+    const validList = allList.filter((item) => item.longitude != null && item.latitude != null)
+    const centerList = validList.length > 0 ? validList : allList
+
+    markers = centerList.map((item) => {
+      const lng = item.longitude || 0
+      const lat = item.latitude || 0
+      const marker = new window.AMap.Marker({
+        position: [lng, lat],
+        title: item.saleName
+      })
+      const content = `
+        <div style="padding:4px 8px;max-width:260px;">
+          <strong>${item.saleName}</strong><br/>
+          <span>电话：${item.salePhone || '-'}</span><br/>
+          <span>地址：${item.address || '-'}</span>
+        </div>
+      `
+      marker.on('click', () => {
+        const infoWindow = new window.AMap.InfoWindow({
+          content,
+          offset: new window.AMap.Pixel(0, -30)
+        })
+        infoWindow.open(map, marker.getPosition())
+      })
+      map.add(marker)
+      return marker
+    })
+
+    if (centerList.length > 0) {
+      map.setFitView(null, false, [60, 60, 60, 60])
+    }
+  } catch (e) {
+    console.error('加载地图数据失败：', e)
+  } finally {
+    mapLoading.value = false
+  }
+}
+
+const switchToMap = async () => {
+  viewMode.value = 'map'
+  await nextTick()
+  if (!map) {
+    initMap()
+  }
+  await loadMapMarkers()
 }
 
 onMounted(() => {
@@ -239,6 +415,10 @@ onMounted(() => {
       font-weight: 600;
       color: #303133;
     }
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
   }
   .search-input {
     margin-bottom: 16px;
@@ -246,9 +426,66 @@ onMounted(() => {
   .pagination {
     margin-top: 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    justify-content: flex-end;
+  }
+  .map-container {
+    width: 100%;
+    height: 70vh;
+    min-height: 500px;
+    border-radius: 4px;
+    overflow: hidden;
+    .amap-wrapper {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .map-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 16px;
+    background: #f5f7fa;
+    border-radius: 8px;
+    .stats-item {
+      flex: 1;
+      text-align: center;
+      .stats-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #409eff;
+      }
+      .stats-label {
+        font-size: 13px;
+        color: #909399;
+        margin-top: 4px;
+      }
+    }
+  }
+  .map-legend {
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: #fafafa;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #606266;
+    .legend-title {
+      font-weight: 600;
+      margin-right: 12px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-marker {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      &.blue {
+        background: #409eff;
+      }
+    }
   }
 }
 </style>

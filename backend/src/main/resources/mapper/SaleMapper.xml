@@ -8,6 +8,9 @@
         <id column="sale_id" property="saleId"/>
         <result column="sale_name" property="saleName"/>
         <result column="sale_phone" property="salePhone"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="address" property="address"/>
         <result column="createtime" property="createtime"/>
         <result column="updatetime" property="updatetime"/>
     </resultMap>
@@ -16,7 +19,7 @@
 
     <!-- 条件分页查询：使用 WHERE 1=1 兼容 PageHelper 分页插件 -->
     <select id="selectByPage" resultMap="BaseResultMap">
-        SELECT sale_id, sale_name, sale_phone, createtime, updatetime
+        SELECT sale_id, sale_name, sale_phone, longitude, latitude, address, createtime, updatetime
         FROM sale
         WHERE 1=1
         <if test="saleName != null and saleName != ''">
@@ -30,7 +33,7 @@
 
     <!-- 根据 ID 查询单个销售地点 -->
     <select id="selectById" resultMap="BaseResultMap">
-        SELECT sale_id, sale_name, sale_phone, createtime, updatetime
+        SELECT sale_id, sale_name, sale_phone, longitude, latitude, address, createtime, updatetime
         FROM sale
         WHERE sale_id = #{saleId}
     </select>
@@ -39,8 +42,8 @@
 
     <!-- 添加销售地点：自增 ID 由数据库自动生成 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="saleId">
-        INSERT INTO sale (sale_name, sale_phone, createtime, updatetime)
-        VALUES (#{saleName}, #{salePhone}, #{createtime}, #{updatetime})
+        INSERT INTO sale (sale_name, sale_phone, longitude, latitude, address, createtime, updatetime)
+        VALUES (#{saleName}, #{salePhone}, #{longitude}, #{latitude}, #{address}, #{createtime}, #{updatetime})
     </insert>
 
     <!-- ==================== 修改语句 ==================== -->
@@ -50,6 +53,9 @@
         UPDATE sale
         SET sale_name = #{saleName},
             sale_phone = #{salePhone},
+            longitude = #{longitude},
+            latitude = #{latitude},
+            address = #{address},
             updatetime = #{updatetime}
         WHERE sale_id = #{saleId}
     </update>
@@ -63,6 +69,12 @@
 
     <select id="countAll" resultType="java.lang.Long">
         SELECT COUNT(*) FROM sale
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT sale_id, sale_name, sale_phone, longitude, latitude, address, createtime, updatetime
+        FROM sale
+        ORDER BY createtime DESC
     </select>
 
 </mapper>

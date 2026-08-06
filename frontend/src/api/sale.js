@@ -1,6 +1,16 @@
 import request from '@/utils/request'
 
 /**
+ * 查询全部销售地点（用于地图展示）
+ */
+export function getAllSale() {
+  return request({
+    url: '/sale/all',
+    method: 'get'
+  })
+}
+
+/**
  * 分页查询销售地点
  * @param {Object} params - { pageNum, pageSize, saleName, salePhone }
  */
