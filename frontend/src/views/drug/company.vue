@@ -10,7 +10,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">医药公司列表</span>
-          <el-button type="primary" :icon="Plus" circle @click="handleAdd" />
+          <el-button v-if="isAdmin" type="primary" :icon="Plus" circle @click="handleAdd" />
         </div>
       </template>
 
@@ -50,7 +50,7 @@
         <el-table-column prop="companyPhone" label="公司电话" width="160" />
         <el-table-column prop="createtime" label="创建时间" width="180" />
         <el-table-column prop="updatetime" label="更新时间" width="180" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column v-if="isAdmin" label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="primary" :icon="Edit" @click="handleEdit(row)">
               编辑
@@ -122,10 +122,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Edit, Delete } from '@element-plus/icons-vue'
 import { getCompanyPage, addCompany, updateCompany, deleteCompany } from '@/api/company'
+import { useUserStore } from '@/store/user'
+
+const isAdmin = computed(() => useUserStore().userInfo?.utype == 1)
 
 const loading = ref(false)
 const tableData = ref([])

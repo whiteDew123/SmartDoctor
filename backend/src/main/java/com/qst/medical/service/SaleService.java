@@ -79,6 +79,15 @@ public class SaleService {
     }
 
     /**
+     * 查询全部销售地点（用于地图展示）
+     *
+     * @return 所有销售地点列表
+     */
+    public List<Sale> getAll() {
+        return saleMapper.selectAll();
+    }
+
+    /**
      * 根据 ID 删除销售地点
      *
      * @param saleId 药店主键 ID

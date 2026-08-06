@@ -10,7 +10,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">药品信息列表</span>
-          <el-button type="primary" :icon="Plus" @click="handleAdd">
+          <el-button v-if="isEditable" type="primary" :icon="Plus" @click="handleAdd">
             添加药品
           </el-button>
         </div>
@@ -53,6 +53,7 @@
               v-if="row.drugImg"
               :src="row.drugImg"
               fit="cover"
+              referrerpolicy="no-referrer"
               style="width: 70px; height: 70px; border-radius: 4px"
               :preview-src-list="[row.drugImg]"
               preview-teleported
@@ -67,12 +68,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="publisher" label="发布者" width="120" />
-        <el-table-column label="操作" width="150" fixed="right" align="center">
+        <el-table-column v-if="isEditable" label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="primary" :icon="Edit" @click="handleEdit(row)">
               编辑
             </el-button>
-            <el-button link type="danger" :icon="Delete" @click="handleDelete(row)">
+            <el-button v-if="isAdmin" link type="danger" :icon="Delete" @click="handleDelete(row)">
               删除
             </el-button>
           </template>
@@ -145,9 +146,15 @@
             :on-error="handleUploadError"
             :show-file-list="false"
           >
-            <img v-if="addForm.drugImg" :src="addForm.drugImg" class="avatar" />
+            <img v-if="addForm.drugImg" :src="addForm.drugImg" class="avatar" referrerpolicy="no-referrer" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
+          <el-input
+            v-model="addForm.drugImg"
+            placeholder="或直接粘贴在线图片URL"
+            class="img-url-input"
+            clearable
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -209,9 +216,15 @@
             :on-error="handleUploadError"
             :show-file-list="false"
           >
-            <img v-if="editForm.drugImg" :src="editForm.drugImg" class="avatar" />
+            <img v-if="editForm.drugImg" :src="editForm.drugImg" class="avatar" referrerpolicy="no-referrer" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
+          <el-input
+            v-model="editForm.drugImg"
+            placeholder="或直接粘贴在线图片URL"
+            class="img-url-input"
+            clearable
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -227,6 +240,13 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Edit, Delete } from '@element-plus/icons-vue'
 import { useDrugStore } from '@/store/modules/drug'
+import { useUserStore } from '@/store/user'
+
+const isEditable = computed(() => {
+  const utype = useUserStore().userInfo?.utype
+  return utype == 1 || utype == 2
+})
+const isAdmin = computed(() => useUserStore().userInfo?.utype == 1)
 
 const drugStore = useDrugStore()
 
@@ -474,5 +494,9 @@ onMounted(() => {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
+}
+.img-url-input {
+  margin-top: 10px;
+  max-width: 400px;
 }
 </style>

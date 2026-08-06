@@ -10,7 +10,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">必备材料列表</span>
-          <el-button type="primary" :icon="Plus" circle @click="handleAdd" />
+          <el-button v-if="isAdmin" type="primary" :icon="Plus" circle @click="handleAdd" />
         </div>
       </template>
 
@@ -37,7 +37,7 @@
         <el-table-column prop="id" label="材料编号" sortable />
         <el-table-column prop="title" label="材料标题" show-overflow-tooltip />
         <el-table-column prop="message" label="材料内容" min-width="300" show-overflow-tooltip />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column v-if="isAdmin" label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="danger" :icon="Delete" @click="handleDelete(row)">
               删除
@@ -119,6 +119,9 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Edit, Delete } from '@element-plus/icons-vue'
 import { getMaterialPage, addMaterial, updateMaterial, deleteMaterial } from '@/api/material'
+import { useUserStore } from '@/store/user'
+
+const isAdmin = computed(() => useUserStore().userInfo?.utype == 1)
 
 const searchQuery = ref('')
 const pageNum = ref(1)

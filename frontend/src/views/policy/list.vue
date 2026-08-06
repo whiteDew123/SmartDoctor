@@ -10,7 +10,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">医保政策列表</span>
-          <el-button type="primary" :icon="Plus" circle @click="handleAdd" />
+          <el-button v-if="isAdmin" type="primary" :icon="Plus" circle @click="handleAdd" />
         </div>
       </template>
 
@@ -61,7 +61,7 @@
             {{ row.createTime || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="240" fixed="right" align="center">
+        <el-table-column v-if="isAdmin" label="操作" width="240" fixed="right" align="center">
           <template #default="{ row }">
             <el-button link type="primary" :icon="View" @click="handleDetail(row)">详情</el-button>
             <el-button link type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
@@ -152,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Edit, Delete, View, Refresh } from '@element-plus/icons-vue'
 import {
@@ -163,6 +163,9 @@ import {
   getPolicyDetail,
   getCityOptions
 } from '@/api/policy'
+import { useUserStore } from '@/store/user'
+
+const isAdmin = computed(() => useUserStore().userInfo?.utype == 1)
 
 const searchTitle = ref('')
 const searchCityId = ref(null)
