@@ -104,10 +104,23 @@ const fallbackMenus = [
   { id: 6, path: '/policy/list', title: '医保政策管理' },
   { id: 7, path: '/company/policy', title: '医药公司政策管理' },
   { id: 8, path: '/doctor', title: '医生信息管理' },
-  { id: 9, path: '/material', title: '必备材料管理' }
+  { id: 9, path: '/material', title: '必备材料管理' },
+  { id: 10, path: '/log', title: '安全日志管理', roles: ['1'] }
 ]
 
-const menus = computed(() => fallbackMenus)
+const menus = computed(() => {
+  // 优先使用后端返回的动态菜单
+  const dynamicMenus = appStore.menus
+  if (dynamicMenus && dynamicMenus.length > 0) {
+    return dynamicMenus
+  }
+  // 静态兜底菜单：根据角色过滤
+  const utype = String(userStore.userInfo?.utype || '')
+  return fallbackMenus.filter(menu => {
+    if (menu.roles && !menu.roles.includes(utype)) return false
+    return true
+  })
+})
 
 const iconMap = {
   '/home': 'HomeFilled',
@@ -118,7 +131,8 @@ const iconMap = {
   '/policy/list': 'Tickets',
   '/company/policy': 'DataLine',
   '/doctor': 'FirstAidKit',
-  '/material': 'Document'
+  '/material': 'Document',
+  '/log': 'Lock'
 }
 
 const getMenuIcon = (menu) => iconMap[menu.path] || 'Menu'
