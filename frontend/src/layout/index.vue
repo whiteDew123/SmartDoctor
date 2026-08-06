@@ -37,6 +37,14 @@
           </span>
           <el-button
             link
+            class="theme-toggle"
+            :title="isDark ? '切换浅色模式' : '切换深色模式'"
+            @click="toggleTheme"
+          >
+            <el-icon :size="18"><component :is="isDark ? 'Sunny' : 'Moon'" /></el-icon>
+          </el-button>
+          <el-button
+            link
             type="primary"
             class="logout-btn"
             @click="handleLogout"
@@ -83,6 +91,19 @@ const showAIAssistant = ref(false)
 const activeMenu = computed(() => route.path)
 const userName = computed(() => userStore.userInfo?.realname || '未登录')
 
+const isDark = ref(false)
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  const html = document.documentElement
+  if (isDark.value) {
+    html.classList.add('dark')
+  } else {
+    html.classList.remove('dark')
+  }
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+}
+
 const fallbackMenus = [
   { id: 1, path: '/home', title: '首页' },
   { id: 2, path: '/drug/company', title: '医药公司管理' },
@@ -127,6 +148,12 @@ const handleLogout = async () => {
 }
 
 onMounted(() => {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark') {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  }
+
   if (!appStore.routesLoaded && userStore.userInfo?.utype) {
     appStore.loadPermissionRoutes(String(userStore.userInfo.utype))
   }
@@ -280,5 +307,54 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+</style>
+
+<style lang="scss">
+/* ===== 深色模式（全局） ===== */
+html.dark .layout-container {
+  background: #141414;
+}
+
+html.dark .header {
+  background: #1d1d1d;
+  border-bottom-color: #333;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+html.dark .header .header-title {
+  color: #52c4a2;
+}
+
+html.dark .header .welcome-text {
+  color: #bbb;
+}
+
+html.dark .header .welcome-text .user-name {
+  color: #52c4a2;
+}
+
+html.dark .header .logout-btn {
+  color: #52c4a2 !important;
+}
+
+html.dark .header .logout-btn:hover {
+  background: #1a3a30;
+}
+
+html.dark .header .theme-toggle {
+  color: #bbb;
+}
+
+html.dark .header .theme-toggle:hover {
+  color: #52c4a2;
+}
+
+html.dark .main {
+  background: #141414;
+}
+
+html.dark .aside {
+  background: linear-gradient(180deg, #1a3a30 0%, #123025 100%);
 }
 </style>
