@@ -47,16 +47,16 @@
           </template>
         </el-table-column>
         <el-table-column prop="drugId" label="药品编号" width="120" sortable />
-        <el-table-column label="药品图片" width="120" align="center">
+        <el-table-column label="药品图片" width="100" align="center">
           <template #default="{ row }">
-            <el-image
-              v-if="row.drugImg"
-              :src="row.drugImg"
-              fit="cover"
-              referrerpolicy="no-referrer"
-              style="width: 70px; height: 70px; border-radius: 4px"
-              :preview-src-list="[row.drugImg]"
-              preview-teleported
+            <img
+              v-if="getDrugImage(row) && !errorRows.has(row.drugId)"
+              :src="getDrugImage(row)"
+              class="drug-thumb"
+              alt="drug"
+              @error="onImgError($event, row)"
+              @load="onImgLoad($event, row)"
+              @click="previewImg(row)"
             />
             <span v-else class="no-img">无图片</span>
           </template>
@@ -232,6 +232,18 @@
         <el-button type="primary" @click="submitEdit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 药品图片预览 -->
+    <el-dialog
+      v-model="previewVisible"
+      width="500"
+      :show-close="true"
+      align-center
+      class="img-preview-dialog"
+      @close="previewImgUrl = ''"
+    >
+      <img v-if="previewImgUrl" :src="previewImgUrl" class="preview-full-img" alt="drug" />
+    </el-dialog>
   </div>
 </template>
 
@@ -241,6 +253,28 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Edit, Delete } from '@element-plus/icons-vue'
 import { useDrugStore } from '@/store/modules/drug'
 import { useUserStore } from '@/store/user'
+
+// 默认药品图片池：按编号排序（hUDR01, hUDR02, ...），需要时按顺序分配
+const drugImageModules = import.meta.glob('@/assets/images/hUDR*.png', { eager: true })
+const defaultDrugImages = Object.entries(drugImageModules)
+  .map(([path, mod]) => {
+    const match = path.match(/hUDR(\d+)\.png$/)
+    return match ? { index: parseInt(match[1]), url: mod.default } : null
+  })
+  .filter(Boolean)
+  .sort((a, b) => a.index - b.index)
+  .map((item) => item.url)
+
+// 记录数据库图片加载失败的 drugId（用响应式 Set，驱动重渲染切换到后备图）
+const dbImgFailed = ref(new Set())
+
+const getDrugImage = (row) => {
+  // 数据库图优先；若曾加载失败，改用后备图
+  if (row.drugImg && !dbImgFailed.value.has(row.drugId)) {
+    return row.drugImg
+  }
+  return fallbackImgMap.value.get(row.drugId) || ''
+}
 
 const isEditable = computed(() => {
   const utype = useUserStore().userInfo?.utype
@@ -284,12 +318,24 @@ const uploadHeaders = computed(() => ({
   token: localStorage.getItem('token') || ''
 }))
 
+// 按顺序分配默认图片：用单独的 Map 跟踪 drugId -> 后备图
+const fallbackImgMap = ref(new Map())
+
 const filteredList = computed(() => {
-  if (!searchQuery.value) return drugStore.drugList
-  const query = searchQuery.value.trim().toLowerCase()
-  return drugStore.drugList.filter(
-    (item) => item.drugName && item.drugName.toLowerCase().includes(query)
-  )
+  const source = !searchQuery.value
+    ? drugStore.drugList
+    : drugStore.drugList.filter(
+        (item) => item.drugName && item.drugName.toLowerCase().includes(searchQuery.value.trim().toLowerCase())
+      )
+  const newMap = new Map()
+  let cursor = 0
+  for (const item of source) {
+    if (cursor < defaultDrugImages.length) {
+      newMap.set(item.drugId, defaultDrugImages[cursor++])
+    }
+  }
+  fallbackImgMap.value = newMap
+  return source
 })
 
 const formatSaleLocations = (saleIds) => {
@@ -426,6 +472,39 @@ onMounted(() => {
   loadData()
   drugStore.fetchSaleList()
 })
+
+// ===== 药品图片查看 =====
+const previewVisible = ref(false)
+const previewImgUrl = ref('')
+
+const previewImg = (row) => {
+  const url = getDrugImage(row)
+  if (!url) return
+  previewImgUrl.value = url
+  previewVisible.value = true
+}
+
+const onImgLoad = (e, row) => {
+  console.log(`[DrugImage] ✓ 加载成功 drugId=${row.drugId}: ${e.target.src.substring(0, 80)}`)
+}
+
+const errorRows = ref(new Set())
+
+const onImgError = (e, row) => {
+  // 1) 当前加载的如果是数据库图：标记失败，触发重渲染切换到后备图
+  if (row.drugImg && !dbImgFailed.value.has(row.drugId)) {
+    dbImgFailed.value.add(row.drugId)
+    dbImgFailed.value = new Set(dbImgFailed.value)
+    console.warn(`[DrugImage] ⚠ 数据库图失败 drugId=${row.drugId}，切到后备图`)
+    return
+  }
+  // 2) 后备图也失败：标记为错误，显示"无图片"
+  if (!errorRows.value.has(row.drugId)) {
+    errorRows.value.add(row.drugId)
+    errorRows.value = new Set(errorRows.value)
+    console.error(`[DrugImage] ✗ 后备图也失败 drugId=${row.drugId}: ${e.target.src}`)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -466,6 +545,26 @@ onMounted(() => {
 .no-img {
   color: #909399;
   font-size: 12px;
+}
+.drug-thumb {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ebeef5;
+  background: #fafafa;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.drug-thumb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.preview-full-img {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
 }
 .avatar-uploader {
   :deep(.el-upload) {
