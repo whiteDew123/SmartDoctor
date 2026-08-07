@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.DrugResult;
 import com.qst.medical.entity.Drug;
 import com.qst.medical.entity.DrugPageInfo;
@@ -22,6 +23,7 @@ public class DrugController {
     }
 
     @PostMapping
+    @LogOperation(value = "添加药品", operation = "ADD")
     public DrugResult addDrug(@RequestBody DrugRequest drugRequest) {
         try {
             Drug drug = new Drug();
@@ -41,6 +43,7 @@ public class DrugController {
     }
 
     @PutMapping("/{drugId}")
+    @LogOperation(value = "修改药品", operation = "UPDATE")
     public DrugResult updateDrug(@PathVariable Long drugId, @RequestBody DrugRequest drugRequest) {
         try {
             Drug drug = new Drug();
@@ -62,6 +65,7 @@ public class DrugController {
     }
 
     @DeleteMapping("/{drugId}")
+    @LogOperation(value = "删除药品", operation = "DELETE")
     public DrugResult deleteDrug(@PathVariable Long drugId) {
         try {
             drugService.deleteDrug(drugId);

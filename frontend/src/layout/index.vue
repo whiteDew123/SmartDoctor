@@ -105,6 +105,8 @@ const toggleTheme = () => {
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 }
 
+const isAdmin = computed(() => userStore.userInfo?.utype == 1)
+
 const fallbackMenus = [
   { id: 1, path: '/home', title: '首页' },
   { id: 2, path: '/drug/company', title: '医药公司管理' },
@@ -117,7 +119,11 @@ const fallbackMenus = [
   { id: 9, path: '/material', title: '必备材料管理' }
 ]
 
-const menus = computed(() => fallbackMenus)
+const adminMenus = [
+  { id: 10, path: '/security-log', title: '安全日志' }
+]
+
+const menus = computed(() => isAdmin.value ? [...fallbackMenus, ...adminMenus] : fallbackMenus)
 
 const iconMap = {
   '/home': 'HomeFilled',
@@ -128,7 +134,8 @@ const iconMap = {
   '/policy/list': 'Tickets',
   '/company/policy': 'DataLine',
   '/doctor': 'FirstAidKit',
-  '/material': 'Document'
+  '/material': 'Document',
+  '/security-log': 'Key'
 }
 
 const getMenuIcon = (menu) => iconMap[menu.path] || 'Menu'

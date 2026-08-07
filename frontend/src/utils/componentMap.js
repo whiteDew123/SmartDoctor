@@ -21,7 +21,8 @@ const componentMap = {
   SaleLocation: () => import('@/views/sale/location.vue'),
   City: () => import('@/views/city/index.vue'),
   CompanyPolicy: () => import('@/views/company/policy.vue'),
-  Material: () => import('@/views/material/index.vue')
+  Material: () => import('@/views/material/index.vue'),
+  SecurityLog: () => import('@/views/system/securityLog.vue')
 }
 
 export function getComponent(name) {

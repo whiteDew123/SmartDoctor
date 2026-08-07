@@ -95,6 +95,7 @@ public class DoctorService {
         // 回填新生成的 id 供前端使用
         param.setAccountId(account.getId());
         param.setPwd("");
+
         return Result.success(param);
     }
 
@@ -175,6 +176,7 @@ public class DoctorService {
             return Result.error("该医师未关联账户");
         }
         accountMapper.updatePwd(existed.getAccountId(), passwordEncoder.encode(pwd));
+
         return Result.success();
     }
 }

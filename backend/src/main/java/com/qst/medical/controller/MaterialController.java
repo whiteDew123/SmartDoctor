@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Material;
 import com.qst.medical.entity.MaterialPageInfo;
@@ -34,6 +35,7 @@ public class MaterialController {
     }
 
     @PostMapping("/add")
+    @LogOperation(value = "添加医疗物资", operation = "ADD")
     public Result<Integer> addMaterial(@RequestBody Material material) {
         int result = materialService.addMaterial(material);
         if (result > 0) {
@@ -44,6 +46,7 @@ public class MaterialController {
     }
 
     @PutMapping("/update")
+    @LogOperation(value = "修改医疗物资", operation = "UPDATE")
     public Result<Integer> updateMaterial(@RequestBody Material material) {
         int result = materialService.updateMaterial(material);
         if (result > 0) {
@@ -54,6 +57,7 @@ public class MaterialController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @LogOperation(value = "删除医疗物资", operation = "DELETE")
     public Result<Integer> deleteMaterial(@PathVariable Long id) {
         int result = materialService.deleteMaterial(id);
         if (result > 0) {

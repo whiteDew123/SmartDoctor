@@ -1,6 +1,7 @@
 package com.qst.medical.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.CompanyPolicy;
 import com.qst.medical.service.CompanyPolicyService;
@@ -39,6 +40,7 @@ public class CompanyPolicyController {
      * 添加医药公司政策
      */
     @PostMapping("/add")
+    @LogOperation(value = "添加医药公司政策", operation = "ADD")
     public Result<Void> add(@RequestBody CompanyPolicy companyPolicy) {
         companyPolicyService.add(companyPolicy);
         return Result.success();
@@ -48,6 +50,7 @@ public class CompanyPolicyController {
      * 修改医药公司政策
      */
     @PutMapping("/update")
+    @LogOperation(value = "修改医药公司政策", operation = "UPDATE")
     public Result<Void> update(@RequestBody CompanyPolicy companyPolicy) {
         companyPolicyService.update(companyPolicy);
         return Result.success();
@@ -57,6 +60,7 @@ public class CompanyPolicyController {
      * 删除医药公司政策
      */
     @DeleteMapping("/{id}")
+    @LogOperation(value = "删除医药公司政策", operation = "DELETE")
     public Result<Void> delete(@PathVariable Long id) {
         companyPolicyService.delete(id);
         return Result.success();
