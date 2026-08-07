@@ -36,4 +36,5 @@ node_modules/
 dist/
 .DS_Store
 *.local
+.env.local
 smartdoctor.sql
