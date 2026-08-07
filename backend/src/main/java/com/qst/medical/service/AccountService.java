@@ -4,8 +4,10 @@ import com.qst.medical.common.Result;
 import com.qst.medical.entity.Account;
 import com.qst.medical.entity.DoctorEntity;
 import com.qst.medical.entity.MyUserDetails;
+import com.qst.medical.entity.PatientEntity;
 import com.qst.medical.mapper.AccountMapper;
 import com.qst.medical.mapper.DoctorMapper;
+import com.qst.medical.mapper.PatientMapper;
 import com.qst.medical.vo.RegisterParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +25,9 @@ public class AccountService implements UserDetailsService {
 
     @Autowired
     private DoctorMapper doctorMapper;
+
+    @Autowired
+    private PatientMapper patientMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,7 +49,7 @@ public class AccountService implements UserDetailsService {
      * 登录页注册：支持医生(utype=2)与患者(utype=3)。
      * - 不允许注册管理员(utype=1)
      * - 医生注册需同步创建 doctor 记录，使用事务保证一致
-     * - 患者注册仅创建 account 记录
+     * - 患者注册需同步创建 patient 记录
      */
     @Transactional(rollbackFor = Exception.class)
     public Result<Void> registerByParam(RegisterParam param) {
@@ -110,6 +115,16 @@ public class AccountService implements UserDetailsService {
             doctor.setLevelId(param.getLevelId());
             doctor.setTypeId(param.getTypeId());
             doctorMapper.insertDoctor(doctor);
+        }
+
+        // 3. 患者需同步写入 patient 记录
+        if ("3".equals(param.getUtype())) {
+            PatientEntity patient = new PatientEntity();
+            patient.setPname(param.getRealname());
+            patient.setAge(param.getAge());
+            patient.setSex(param.getSex());
+            patient.setState(0);
+            patientMapper.insertPatient(patient);
         }
 
         return Result.success();

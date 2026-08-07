@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :class="{ leaving }">
     <video
       autoplay
       loop
@@ -199,6 +199,7 @@ const router = useRouter()
 const userStore = useUserStore()
 
 const showLogin = ref(false)
+const leaving = ref(false)
 const mode = ref('login')
 const particleCanvas = ref(null)
 const displayText = ref('')
@@ -252,7 +253,13 @@ const handleLogin = async () => {
   try {
     await userStore.handleLogin(loginForm)
     ElMessage.success('登录成功')
-    router.push('/home')
+    showLogin.value = false
+    setTimeout(() => {
+      leaving.value = true
+      setTimeout(() => {
+        router.push('/home')
+      }, 600)
+    }, 400)
   } catch (error) {
     ElMessage.error('登录失败，请检查用户名和密码')
   }
@@ -406,39 +413,47 @@ let particles = []
 let mouseX = -9999
 let mouseY = -9999
 const PARTICLE_COUNT = 200
-const CONNECT_DISTANCE = 180
-const MOUSE_RADIUS = 100
+const BASE_AREA = 1920 * 1080
+const BASE_DIAG = Math.sqrt(1920 * 1920 + 1080 * 1080)
+
+const getSpeedScale = (w, h) => Math.sqrt(w * w + h * h) / BASE_DIAG
+const CONNECT_DISTANCE = 260
+const MOUSE_RADIUS = 120
+const RIPPLE_STRENGTH = 0.6
 const COLORS = [
   'rgba(0, 217, 191, @)',   // 青绿色
   'rgba(64, 158, 255, @)'   // 天蓝色
 ]
 
 class Particle {
-  constructor(w, h) {
+  constructor(w, h, speedScale) {
+    this.speedScale = speedScale || 1
+    const topBound = h * 0.54
     this.x = Math.random() * w
-    this.y = Math.random() * h
-    this.vx = (Math.random() - 0.5) * 0.6
-    this.vy = (Math.random() - 0.5) * 0.6
+    this.y = topBound + Math.random() * (h - topBound)
+    this.vx = (Math.random() - 0.5) * 0.6 * this.speedScale
+    this.vy = (Math.random() - 0.5) * 0.6 * this.speedScale
     this.radius = Math.random() * 3 + 2
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)]
   }
 
   update(w, h) {
+    const topBound = h * 0.54
     const dx = this.x - mouseX
     const dy = this.y - mouseY
     const dist = Math.sqrt(dx * dx + dy * dy)
 
     if (dist < MOUSE_RADIUS && dist > 0) {
       const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS
-      this.vx -= (dx / dist) * force * 0.25
-      this.vy -= (dy / dist) * force * 0.25
+      this.vx += (dx / dist) * force * force * RIPPLE_STRENGTH * this.speedScale
+      this.vy += (dy / dist) * force * force * RIPPLE_STRENGTH * this.speedScale
     }
 
     this.vx *= 0.99
     this.vy *= 0.99
 
     const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy)
-    const minSpeed = 0.5
+    const minSpeed = 0.5 * this.speedScale
     if (speed < minSpeed) {
       const scale = minSpeed / (speed || 0.01)
       this.vx *= scale
@@ -449,7 +464,7 @@ class Particle {
     this.y += this.vy
 
     if (this.x < 0 || this.x > w) this.vx *= -1
-    if (this.y < 0 || this.y > h) this.vy *= -1
+    if (this.y < topBound || this.y > h) this.vy *= -1
   }
 }
 
@@ -461,7 +476,9 @@ const initParticles = () => {
   canvas.height = window.innerHeight
 
   const ctx = canvas.getContext('2d')
-  particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle(canvas.width, canvas.height))
+  const count = getTargetCount(canvas.width, canvas.height)
+  const speedScale = getSpeedScale(canvas.width, canvas.height)
+  particles = Array.from({ length: count }, () => new Particle(canvas.width, canvas.height, speedScale))
 
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -498,10 +515,38 @@ const initParticles = () => {
   animate()
 }
 
+const getTargetCount = (w, h) => {
+  const area = w * h
+  return Math.max(50, Math.min(400, Math.round(PARTICLE_COUNT * area / BASE_AREA)))
+}
+
 const handleResize = () => {
-  if (particleCanvas.value) {
-    particleCanvas.value.width = window.innerWidth
-    particleCanvas.value.height = window.innerHeight
+  const canvas = particleCanvas.value
+  if (!canvas) return
+  const oldW = canvas.width
+  const oldH = canvas.height
+  const newW = window.innerWidth
+  const newH = window.innerHeight
+  canvas.width = newW
+  canvas.height = newH
+  const newSpeedScale = getSpeedScale(newW, newH)
+  if (oldW && oldH) {
+    const scaleX = newW / oldW
+    const scaleY = newH / oldH
+    particles.forEach((p) => {
+      p.x *= scaleX
+      p.y *= scaleY
+      p.vx *= scaleX
+      p.vy *= scaleY
+      p.speedScale = newSpeedScale
+    })
+  }
+  const target = getTargetCount(newW, newH)
+  while (particles.length < target) {
+    particles.push(new Particle(newW, newH, newSpeedScale))
+  }
+  while (particles.length > target) {
+    particles.pop()
   }
 }
 
@@ -543,6 +588,12 @@ onBeforeUnmount(() => {
   align-items: center;
   position: relative;
   overflow: hidden;
+  transition: opacity 0.6s ease;
+
+  &.leaving {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .bg-video {

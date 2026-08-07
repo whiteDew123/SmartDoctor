@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.medical.mapper.PatientMapper">
+
+    <insert id="insertPatient" parameterType="com.qst.medical.entity.PatientEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO patient (pname, age, sex, state, enter_time, out_time)
+        VALUES (#{pname}, #{age}, #{sex}, #{state}, #{enterTime}, #{outTime})
+    </insert>
+
+</mapper>

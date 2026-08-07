@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layout-container">
+  <el-container class="layout-container" :class="{ 'logging-out': loggingOut }">
     <!-- ===== 左侧边栏 ===== -->
     <el-aside :width="asideWidth + 'px'" class="aside">
       <div class="aside-logo">
@@ -88,6 +88,7 @@ const appStore = useAppStore()
 
 const asideWidth = ref(240)
 const showAIAssistant = ref(false)
+const loggingOut = ref(false)
 const activeMenu = computed(() => route.path)
 const userName = computed(() => userStore.userInfo?.realname || '未登录')
 
@@ -142,9 +143,12 @@ const handleLogout = async () => {
   } catch (e) {
     return
   }
-  appStore.clearPermissionRoutes()
-  userStore.logout()
-  router.push('/login')
+  loggingOut.value = true
+  setTimeout(() => {
+    appStore.clearPermissionRoutes()
+    userStore.logout()
+    router.push('/login')
+  }, 500)
 }
 
 onMounted(() => {
@@ -165,14 +169,22 @@ onMounted(() => {
   height: 100vh;
   width: 100%;
   background: #f2f4f7;
+  transition: opacity 0.5s ease;
+
+  &.logging-out {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .aside {
-  background: linear-gradient(180deg, #2FB79B 0%, #22A688 100%);
+  background: linear-gradient(180deg, rgba(47, 183, 155, 0.9) 0%, rgba(34, 166, 136, 0.9) 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
 
   .aside-logo {
     height: 60px;
@@ -238,8 +250,13 @@ onMounted(() => {
 }
 
 .header {
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.4);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -296,6 +313,8 @@ onMounted(() => {
 
 .main {
   padding: 0;
+  margin-top: -60px;
+  padding-top: 60px;
   background: #f2f4f7;
   overflow: auto;
 }
@@ -317,8 +336,10 @@ html.dark .layout-container {
 }
 
 html.dark .header {
-  background: #1d1d1d;
-  border-bottom-color: #333;
+  background: rgba(29, 29, 29, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(51, 51, 51, 0.4);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
@@ -355,6 +376,7 @@ html.dark .main {
 }
 
 html.dark .aside {
-  background: linear-gradient(180deg, #1a3a30 0%, #123025 100%);
+  background: linear-gradient(180deg, rgba(26, 58, 48, 0.9) 0%, rgba(18, 48, 37, 0.9) 100%);
+  border-right-color: rgba(255, 255, 255, 0.06);
 }
 </style>

@@ -30,7 +30,7 @@
               <el-icon :size="32"><User /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">{{ totalCounts.doctorCount ?? 0 }}</div>
+              <div class="stat-value">{{ animatedCounts.doctorCount }}</div>
               <div class="stat-label">医师人数</div>
             </div>
           </div>
@@ -41,7 +41,7 @@
               <el-icon :size="32"><FirstAidKit /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">{{ totalCounts.drugCount ?? 0 }}</div>
+              <div class="stat-value">{{ animatedCounts.drugCount }}</div>
               <div class="stat-label">药物种类</div>
             </div>
           </div>
@@ -52,7 +52,7 @@
               <el-icon :size="32"><OfficeBuilding /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">{{ totalCounts.companyCount ?? 0 }}</div>
+              <div class="stat-value">{{ animatedCounts.companyCount }}</div>
               <div class="stat-label">合作企业</div>
             </div>
           </div>
@@ -63,7 +63,7 @@
               <el-icon :size="32"><Shop /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-value">{{ totalCounts.pharmacyCount ?? 0 }}</div>
+              <div class="stat-value">{{ animatedCounts.pharmacyCount }}</div>
               <div class="stat-label">入驻药店</div>
             </div>
           </div>
@@ -184,6 +184,30 @@ const totalCounts = reactive({
   companyCount: 0,
   pharmacyCount: 0
 })
+
+const animatedCounts = reactive({
+  doctorCount: 0,
+  drugCount: 0,
+  companyCount: 0,
+  pharmacyCount: 0
+})
+
+const countUp = (key, target, duration = 1200) => {
+  const start = animatedCounts[key]
+  const diff = target - start
+  if (diff === 0) return
+  const startTime = performance.now()
+  const animate = (now) => {
+    const elapsed = now - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    animatedCounts[key] = Math.round(start + diff * eased)
+    if (progress < 1) {
+      requestAnimationFrame(animate)
+    }
+  }
+  requestAnimationFrame(animate)
+}
 
 const latestMedicalPolicies = ref([])
 const latestCompanyPolicies = ref([])
@@ -308,6 +332,10 @@ const loadDashboard = async () => {
     const data = res.data
     if (data) {
       Object.assign(totalCounts, data.totalCounts || {})
+      const keys = ['doctorCount', 'drugCount', 'companyCount', 'pharmacyCount']
+      keys.forEach((k, i) => {
+        setTimeout(() => countUp(k, totalCounts[k] || 0), i * 100)
+      })
       latestMedicalPolicies.value = data.latestMedicalPolicies || []
       latestCompanyPolicies.value = data.latestCompanyPolicies || []
       await nextTick()
@@ -416,11 +444,11 @@ onUnmounted(() => {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   margin-bottom: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
   }
 
   .stat-icon {
@@ -459,10 +487,16 @@ onUnmounted(() => {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.35s ease;
+
+  &:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+  }
 
   :deep(.el-card__header) {
     padding: 14px 20px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   :deep(.el-card__body) {
@@ -608,15 +642,15 @@ onUnmounted(() => {
 
 .mod-card {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
   .mod-thumb {
@@ -627,12 +661,12 @@ onUnmounted(() => {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease;
+      transition: transform 0.35s ease;
     }
   }
 
   &:hover .mod-thumb img {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 
   .mod-title {
@@ -641,7 +675,7 @@ onUnmounted(() => {
     font-weight: 600;
     color: #1f2937;
     letter-spacing: 1px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
     text-align: center;
   }
 }
@@ -693,6 +727,10 @@ html.dark .stat-card {
   background: #1d1d1d;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 
+  &:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  }
+
   .stat-info .stat-value {
     color: #fff;
   }
@@ -706,7 +744,11 @@ html.dark .chart-card {
   background: #1d1d1d;
   border-color: #333;
 
-  .el-card__header {
+  &:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  }
+
+  :deep(.el-card__header) {
     border-bottom-color: #333;
   }
 
@@ -735,9 +777,13 @@ html.dark .mod-card {
   background: #1d1d1d;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 
+  &:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
   .mod-title {
     color: #fff;
-    border-top-color: #333;
+    border-top-color: rgba(255, 255, 255, 0.08);
   }
 }
 </style>
