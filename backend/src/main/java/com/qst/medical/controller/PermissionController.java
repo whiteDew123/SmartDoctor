@@ -22,9 +22,14 @@ public class PermissionController {
 
     @GetMapping("/permissions")
     public Result<Map<String, Object>> getPermissions(@RequestParam("roleName") String roleName) {
-        List<PermissionModel> permissions = permissionService.getAllPermission(roleName);
-        Map<String, Object> data = new HashMap<>();
-        data.put("permissions", permissions);
-        return Result.success(data);
+        try {
+            List<PermissionModel> permissions = permissionService.getAllPermission(roleName);
+            Map<String, Object> data = new HashMap<>();
+            data.put("permissions", permissions);
+            return Result.success(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取权限列表失败：" + e.getMessage());
+        }
     }
 }

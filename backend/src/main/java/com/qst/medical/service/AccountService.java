@@ -145,6 +145,7 @@ public class AccountService implements UserDetailsService {
         }
 
         accountMapper.updatePwd(account.getId(), passwordEncoder.encode(newPwd));
+
         return Result.success();
     }
 

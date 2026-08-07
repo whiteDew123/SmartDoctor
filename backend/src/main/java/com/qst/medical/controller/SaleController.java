@@ -1,6 +1,7 @@
 package com.qst.medical.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Sale;
 import com.qst.medical.param.SaleParam;
@@ -83,6 +84,7 @@ public class SaleController {
      * @return 添加后的销售地点（含自增 ID）
      */
     @PostMapping
+    @LogOperation(value = "添加销售地点", operation = "ADD")
     public Result<Sale> save(@RequestBody Sale sale) {
         return Result.success(saleService.save(sale));
     }
@@ -98,6 +100,7 @@ public class SaleController {
      * @return 受影响的行数
      */
     @PutMapping("/{id}")
+    @LogOperation(value = "修改销售地点", operation = "UPDATE")
     public Result<Integer> update(@PathVariable Long id, @RequestBody Sale sale) {
         sale.setSaleId(id);
         return Result.success(saleService.update(sale));
@@ -110,6 +113,7 @@ public class SaleController {
      * 请求体：{ "saleId": 1, "saleName": "修改后的药房", "salePhone": "010-87654321" }
      */
     @PutMapping
+    @LogOperation(value = "修改销售地点", operation = "UPDATE")
     public Result<Integer> updateByBody(@RequestBody Sale sale) {
         return Result.success(saleService.update(sale));
     }
@@ -123,6 +127,7 @@ public class SaleController {
      * @return 受影响的行数
      */
     @DeleteMapping("/{id}")
+    @LogOperation(value = "删除销售地点", operation = "DELETE")
     public Result<Integer> delete(@PathVariable Long id) {
         return Result.success(saleService.deleteById(id));
     }

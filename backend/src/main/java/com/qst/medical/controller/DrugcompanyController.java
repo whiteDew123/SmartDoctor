@@ -1,6 +1,7 @@
 package com.qst.medical.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.DrugResult;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.Drugcompany;
@@ -72,6 +73,7 @@ public class DrugcompanyController {
      * @return 添加成功后的总页数信息
      */
     @PostMapping("")
+    @LogOperation(value = "添加医药公司", operation = "ADD")
     public DrugResult save(@RequestBody Drugcompany drugcompany) {
         drugcompanyService.save(drugcompany);
         // 查询总页数供前端刷新列表使用
@@ -93,6 +95,7 @@ public class DrugcompanyController {
      * @return 统一响应格式
      */
     @PutMapping("/{companyId}")
+    @LogOperation(value = "修改医药公司", operation = "UPDATE")
     public DrugResult update(@PathVariable Long companyId, @RequestBody Drugcompany drugcompany) {
         drugcompany.setCompanyId(companyId);
         drugcompanyService.update(drugcompany);
@@ -108,6 +111,7 @@ public class DrugcompanyController {
      * @return 统一响应格式
      */
     @DeleteMapping("/{companyId}")
+    @LogOperation(value = "删除医药公司", operation = "DELETE")
     public DrugResult delete(@PathVariable Long companyId) {
         drugcompanyService.deleteById(companyId);
         return DrugResult.success("删除成功");

@@ -1,6 +1,7 @@
 package com.qst.medical.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.MedicalPolicy;
 import com.qst.medical.model.MedicalPolicyModel;
@@ -80,6 +81,7 @@ public class MedicalPolicyController {
      * @return 统一响应格式 Result 包裹添加后的医保政策（含自增 ID）
      */
     @PostMapping
+    @LogOperation(value = "添加医保政策", operation = "ADD")
     public Result<MedicalPolicy> save(@RequestBody MedicalPolicy medicalPolicy) {
         return Result.success(medicalPolicyService.save(medicalPolicy));
     }
@@ -100,6 +102,7 @@ public class MedicalPolicyController {
      * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功）
      */
     @PutMapping("/{id}")
+    @LogOperation(value = "修改医保政策", operation = "UPDATE")
     public Result<Integer> update(@PathVariable Long id, @RequestBody MedicalPolicy medicalPolicy) {
         medicalPolicy.setId(id);
         return Result.success(medicalPolicyService.update(medicalPolicy));
@@ -122,6 +125,7 @@ public class MedicalPolicyController {
      * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功）
      */
     @PutMapping
+    @LogOperation(value = "修改医保政策", operation = "UPDATE")
     public Result<Integer> updateById(@RequestBody MedicalPolicy medicalPolicy) {
         return Result.success(medicalPolicyService.update(medicalPolicy));
     }
@@ -136,6 +140,7 @@ public class MedicalPolicyController {
      * @return 统一响应格式 Result，data 为受影响的行数（1 表示成功，0 表示记录不存在）
      */
     @DeleteMapping("/{id}")
+    @LogOperation(value = "删除医保政策", operation = "DELETE")
     public Result<Integer> deleteById(@PathVariable Long id) {
         return Result.success(medicalPolicyService.deleteById(id));
     }

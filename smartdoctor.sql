@@ -347,7 +347,7 @@ CREATE TABLE `permission`  (
   `level` int NULL DEFAULT NULL COMMENT '菜单级别',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标题',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -361,6 +361,7 @@ INSERT INTO `permission` VALUES (6, NULL, 'PolicyList', '/policy/list', 'PolicyL
 INSERT INTO `permission` VALUES (7, NULL, 'CompanyPolicy', '/company/policy', 'CompanyPolicy', 1, '医药公司政策管理');
 INSERT INTO `permission` VALUES (8, NULL, 'Doctor', '/doctor', 'Doctor', 1, '医生信息管理');
 INSERT INTO `permission` VALUES (9, NULL, 'Material', '/material', 'Material', 1, '必备材料管理');
+INSERT INTO `permission` VALUES (13, NULL, 'SecurityLog', '/security-log', 'SecurityLog', 1, '安全日志');
 
 -- ----------------------------
 -- Table structure for role_permission
@@ -385,6 +386,7 @@ INSERT INTO `role_permission` VALUES (6, '1', 6);
 INSERT INTO `role_permission` VALUES (7, '1', 7);
 INSERT INTO `role_permission` VALUES (8, '1', 8);
 INSERT INTO `role_permission` VALUES (9, '1', 9);
+INSERT INTO `role_permission` VALUES (17, '1', 13);
 INSERT INTO `role_permission` VALUES (10, '2', 1);
 INSERT INTO `role_permission` VALUES (11, '2', 8);
 INSERT INTO `role_permission` VALUES (12, '2', 5);
@@ -464,5 +466,30 @@ INSERT INTO `treat_type` VALUES (3, '住院');
 INSERT INTO `treat_type` VALUES (4, '日间手术');
 INSERT INTO `treat_type` VALUES (5, '家庭医生签约服务');
 INSERT INTO `treat_type` VALUES (6, '互联网诊疗');
+
+-- ----------------------------
+-- Table structure for sys_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_log`;
+CREATE TABLE `sys_log`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `account_id` bigint NULL DEFAULT NULL COMMENT '操作用户ID',
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户名',
+  `realname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '真实姓名',
+  `operation` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作类型: ADD/UPDATE/DELETE/LOGIN/LOGOUT/REGISTER/PASSWORD_RESET/UPLOAD 等',
+  `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作描述',
+  `ip_address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '客户端IP',
+  `user_agent` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '浏览器信息',
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作状态: SUCCESS/FAILURE',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_username`(`username`) USING BTREE,
+  INDEX `idx_operation`(`operation`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统操作日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_log  end
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

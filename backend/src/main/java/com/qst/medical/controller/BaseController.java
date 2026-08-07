@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.UploadResult;
 import com.qst.medical.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ public class BaseController {
     private FileUploadService fileUploadService;
 
     @PostMapping("/upload")
+    @LogOperation(value = "文件上传", operation = "UPLOAD")
     public UploadResult upload(@RequestParam("file") MultipartFile file) {
         try {
             if (file == null || file.isEmpty()) {

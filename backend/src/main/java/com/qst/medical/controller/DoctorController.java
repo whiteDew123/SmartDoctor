@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.DoctorLevelEntity;
 import com.qst.medical.entity.TreatTypeEntity;
@@ -43,21 +44,25 @@ public class DoctorController {
     }
 
     @PostMapping("")
+    @LogOperation(value = "添加医生", operation = "ADD")
     public Result<DoctorSaveParam> add(@RequestBody DoctorSaveParam param) {
         return doctorService.addDoctor(param);
     }
 
     @PutMapping("/{id}")
+    @LogOperation(value = "修改医生信息", operation = "UPDATE")
     public Result<DoctorSaveParam> update(@PathVariable Long id, @RequestBody DoctorSaveParam param) {
         return doctorService.updateDoctor(id, param);
     }
 
     @DeleteMapping("/{id}")
+    @LogOperation(value = "删除医生", operation = "DELETE")
     public Result<Void> delete(@PathVariable Long id) {
         return doctorService.deleteDoctor(id);
     }
 
     @PutMapping("/{id}/reset-password")
+    @LogOperation(value = "重置医生密码", operation = "UPDATE")
     public Result<Void> resetPassword(@PathVariable Long id, @RequestParam String pwd) {
         return doctorService.resetPassword(id, pwd);
     }

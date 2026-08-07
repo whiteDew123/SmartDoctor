@@ -1,5 +1,6 @@
 package com.qst.medical.controller;
 
+import com.qst.medical.annotation.LogOperation;
 import com.qst.medical.common.Result;
 import com.qst.medical.entity.City;
 import com.qst.medical.service.CityService;
@@ -37,6 +38,7 @@ public class CityController {
      * 添加城市信息
      */
     @PostMapping("/add")
+    @LogOperation(value = "添加城市", operation = "ADD")
     public Result<Void> add(@RequestBody City city) {
         cityService.add(city);
         return Result.success();
@@ -46,6 +48,7 @@ public class CityController {
      * 删除城市信息（级联删除该城市下的所有医保政策）
      */
     @DeleteMapping("/{cityId}")
+    @LogOperation(value = "删除城市", operation = "DELETE")
     public Result<Void> delete(@PathVariable Long cityId) {
         cityService.deleteCity(cityId);
         return Result.success();

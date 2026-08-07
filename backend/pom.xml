@@ -114,6 +114,12 @@
             <version>2.10.5</version>
         </dependency>
 
+        <!-- AOP切面依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!-- security框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
