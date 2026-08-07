@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 const AI_CONFIG = {
-  apiKey: 'OmQiPbQo4osbVNFNODwLX3gmM7SEwC3t2-DhH79ZbL8fgWIIxFtfaL-jbqdgHDZDERo5lb4zAk1TPP_PSFc4dA',
-  url: 'https://www.sophnet.com/api/open-apis/v1/chat/completions',
-  model: 'DeepSeek-V4-Flash',
+  apiKey: import.meta.env.VITE_AI_API_KEY,
+  url: import.meta.env.VITE_AI_API_URL || 'https://www.sophnet.com/api/open-apis/v1/chat/completions',
+  model: import.meta.env.VITE_AI_MODEL || 'DeepSeek-V4-Flash',
   maxTokens: 8192
 }
 
