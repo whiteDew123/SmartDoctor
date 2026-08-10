@@ -37,4 +37,5 @@ dist/
 .DS_Store
 *.local
 .env.local
+application-local.properties
 smartdoctor.sql
