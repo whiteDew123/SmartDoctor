@@ -25,3 +25,17 @@ export function chatWithAI(messages) {
     }
   )
 }
+
+export function queryKnowledge(question) {
+  return axios.post(
+    '/api/knowledge/query',
+    { question },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': localStorage.getItem('token') || ''
+      },
+      timeout: 120000
+    }
+  )
+}

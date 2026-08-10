@@ -44,10 +44,22 @@
             {{ showHistory ? '隐藏历史' : '历史记录' }}
           </el-button>
           <div class="chat-title">小伊 AI助手</div>
-          <el-button @click="createNewChat" class="new-chat-btn-header">
-            <el-icon><Plus /></el-icon>
-            新对话
-          </el-button>
+          <div class="header-right">
+            <el-tooltip content="开启后使用本地知识库回答" placement="bottom">
+              <el-switch
+                v-model="knowledgeMode"
+                active-text="知识库"
+                inactive-text="对话"
+                size="small"
+                @change="onKnowledgeModeChange"
+                class="knowledge-switch"
+              />
+            </el-tooltip>
+            <el-button @click="createNewChat" class="new-chat-btn-header">
+              <el-icon><Plus /></el-icon>
+              新对话
+            </el-button>
+          </div>
         </div>
 
         <!-- 聊天消息列表 -->
@@ -219,7 +231,7 @@
 import { ref, nextTick, watch, computed, onMounted } from 'vue'
 import { User, Promotion, Picture, Document, CircleClose, Plus, Delete, ChatDotRound, Fold, Expand } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { chatWithAI } from '@/api/ai'
+import { chatWithAI, queryKnowledge } from '@/api/ai'
 
 const props = defineProps({
   modelValue: {
@@ -245,6 +257,16 @@ const showHistory = ref(true)
 
 const MAX_PENDING_ITEMS = 3
 const STORAGE_KEY = 'ai_chat_history'
+
+const knowledgeMode = ref(false)
+
+const onKnowledgeModeChange = (val) => {
+  if (val) {
+    ElMessage.success('已切换到知识库模式，将基于本地数据进行回答')
+  } else {
+    ElMessage.info('已切换到普通对话模式')
+  }
+}
 
 const uploadUrl = '/api/base/upload'
 const uploadHeaders = computed(() => ({
@@ -559,34 +581,45 @@ const sendMessage = async () => {
   await scrollToBottom()
 
   try {
-    // 构建消息历史（保留最近10条消息作为上下文）
-    const recentMessages = messages.value
-      .filter(msg => msg.role !== 'system')
-      .slice(-10)
-      .map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }))
+    if (knowledgeMode.value) {
+      const response = await queryKnowledge(userMessage.content)
+      const data = response.data.data
+      const answer = data.answer || '抱歉，知识库查询失败。'
+      const displayContent = '[知识库] ' + answer
 
-    // 添加系统提示词
-    const apiMessages = [
-      {
-        role: 'system',
-        content: '你是小伊，一个友好、专业的AI助手。请用简洁明了的语言回答问题。如果用户发送了图片，请描述你看到的图片内容。如果用户上传了文件，请告知已收到文件并询问用户需要什么帮助。'
-      },
-      ...recentMessages
-    ]
+      messages.value.push({
+        role: 'assistant',
+        content: displayContent,
+        time: Date.now()
+      })
+    } else {
+      const recentMessages = messages.value
+        .filter(msg => msg.role !== 'system')
+        .slice(-10)
+        .map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
 
-    // 调用AI API
-    const response = await chatWithAI(apiMessages)
-    
-    const aiContent = response.data.choices?.[0]?.message?.content || '抱歉，我暂时无法回答这个问题。'
-    
-    messages.value.push({
-      role: 'assistant',
-      content: aiContent,
-      time: Date.now()
-    })
+      const apiMessages = [
+        {
+          role: 'system',
+          content: '你是小伊，一个友好、专业的AI助手。请用简洁明了的语言回答问题。如果用户发送了图片，请描述你看到的图片内容。如果用户上传了文件，请告知已收到文件并询问用户需要什么帮助。'
+        },
+        ...recentMessages
+      ]
+
+      const response = await chatWithAI(apiMessages)
+      
+      const aiContent = response.data.choices?.[0]?.message?.content || '抱歉，我暂时无法回答这个问题。'
+      const displayContent = '[AI对话] ' + aiContent
+
+      messages.value.push({
+        role: 'assistant',
+        content: displayContent,
+        time: Date.now()
+      })
+    }
   } catch (error) {
     console.error('AI聊天错误:', error)
     ElMessage.error('发送消息失败，请稍后重试')
@@ -869,6 +902,21 @@ const sendMessage = async () => {
       background: rgba(255, 255, 255, 0.25);
       transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .knowledge-switch {
+    --el-switch-on-color: rgba(255, 255, 255, 0.9);
+    :deep(.el-switch__label) {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 12px;
+      font-weight: 500;
     }
   }
 }
